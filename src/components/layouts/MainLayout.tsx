@@ -112,6 +112,19 @@ const Dashboard: React.FC = ({ children }) => {
   const Drawer = widthMax700 ? MuiDrawer : CustomDrawer
 
   const { t } = useTranslation()
+  const isAdmin = React.useMemo(
+    () => (user?.roles.find((role) => role.name === 'admin') ? true : false),
+    [user]
+  )
+
+  const shortUserName = React.useMemo(
+    () => (user ? getUserShortName(user) : ''),
+    [user]
+  )
+
+  React.useEffect(() => {
+    console.log('CURRENT USER', user)
+  }, [user])
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -181,7 +194,7 @@ const Dashboard: React.FC = ({ children }) => {
                   <Stack>
                     <Typography variant="subtitle2">
                       {user ? (
-                        getUserShortName(user)
+                        shortUserName
                       ) : (
                         <Skeleton variant="text" width={100} />
                       )}
@@ -229,63 +242,85 @@ const Dashboard: React.FC = ({ children }) => {
               </ListItemButton>
             </Link>
             <Divider sx={{ my: 1 }} />
-            <Link to="/roles">
-              <ListItemButton selected={location.pathname === '/roles'}>
-                <ListItemIcon>
-                  <BadgeIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Roles')} />
-              </ListItemButton>
-            </Link>
-            <Link to="/users">
-              <ListItemButton selected={location.pathname === '/users'}>
-                <ListItemIcon>
-                  <PeopleIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Users')} />
-              </ListItemButton>
-            </Link>
-            <Link to="/hospitals">
-              <ListItemButton selected={location.pathname === '/hospitals'}>
-                <ListItemIcon>
-                  <CottageIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Hospitals')} />
-              </ListItemButton>
-            </Link>
-            <Link to="/departments">
-              <ListItemButton selected={location.pathname === '/departments'}>
-                <ListItemIcon>
-                  <FolderOpenIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Departments')} />
-              </ListItemButton>
-            </Link>
-            <Link to="/labels">
-              <ListItemButton selected={location.pathname === '/labels'}>
-                <ListItemIcon>
-                  <LabelIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Labels')} />
-              </ListItemButton>
-            </Link>
-            <Link to="/companies">
-              <ListItemButton selected={location.pathname === '/companies'}>
-                <ListItemIcon>
-                  <ApartmentIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Companies')} />
-              </ListItemButton>
-            </Link>
+
+            {isAdmin && (
+              <Link to="/roles">
+                <ListItemButton selected={location.pathname === '/roles'}>
+                  <ListItemIcon>
+                    <BadgeIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t('Roles')} />
+                </ListItemButton>
+              </Link>
+            )}
+
+            {isAdmin && (
+              <Link to="/users">
+                <ListItemButton selected={location.pathname === '/users'}>
+                  <ListItemIcon>
+                    <PeopleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t('Users')} />
+                </ListItemButton>
+              </Link>
+            )}
+
+            {isAdmin && (
+              <Link to="/hospitals">
+                <ListItemButton selected={location.pathname === '/hospitals'}>
+                  <ListItemIcon>
+                    <CottageIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t('Hospitals')} />
+                </ListItemButton>
+              </Link>
+            )}
+
+            {isAdmin && (
+              <Link to="/departments">
+                <ListItemButton selected={location.pathname === '/departments'}>
+                  <ListItemIcon>
+                    <FolderOpenIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t('Departments')} />
+                </ListItemButton>
+              </Link>
+            )}
+
+            {isAdmin && (
+              <Link to="/labels">
+                <ListItemButton selected={location.pathname === '/labels'}>
+                  <ListItemIcon>
+                    <LabelIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t('Labels')} />
+                </ListItemButton>
+              </Link>
+            )}
+
+            {isAdmin && (
+              <Link to="/companies">
+                <ListItemButton selected={location.pathname === '/companies'}>
+                  <ListItemIcon>
+                    <ApartmentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t('Companies')} />
+                </ListItemButton>
+              </Link>
+            )}
+
             <Divider sx={{ my: 1 }} />
-            <Link to="/rates">
-              <ListItemButton selected={location.pathname === '/rates'}>
-                <ListItemIcon>
-                  <StarOutlineIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Rates')} />
-              </ListItemButton>
-            </Link>
+            {isAdmin && (
+              <Link to="/rates">
+                <ListItemButton selected={location.pathname === '/rates'}>
+                  <ListItemIcon>
+                    <StarOutlineIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t('Rates')} />
+                </ListItemButton>
+              </Link>
+            )}
+
             <Link to="/rooms">
               <ListItemButton selected={location.pathname.startsWith('/rooms')}>
                 <ListItemIcon>
@@ -304,15 +339,21 @@ const Dashboard: React.FC = ({ children }) => {
                 <ListItemText primary={t('Booking')} />
               </ListItemButton>
             </Link>
-            <Divider sx={{ my: 1 }} />
-            <Link to="/application">
-              <ListItemButton selected={location.pathname === '/application'}>
-                <ListItemIcon>
-                  <LayersIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Application')} />
-              </ListItemButton>
-            </Link>
+            {isAdmin && (
+              <>
+                <Divider sx={{ my: 1 }} />
+                <Link to="/application">
+                  <ListItemButton
+                    selected={location.pathname === '/application'}
+                  >
+                    <ListItemIcon>
+                      <LayersIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t('Application')} />
+                  </ListItemButton>
+                </Link>
+              </>
+            )}
           </List>
         </Drawer>
         <Box
