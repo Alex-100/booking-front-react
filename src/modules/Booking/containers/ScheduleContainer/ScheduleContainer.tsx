@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useMemo } from 'react'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
 import { alpha } from '@mui/material/styles'
@@ -26,6 +26,7 @@ import Box from '@mui/material/Box'
 import { DATE_FORMAT_TEMPLATE } from '../../../../constants'
 import { PlaceModel, RoomModel } from '../../../Room/types'
 import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
 // @ts-ignore
 const moment = extendMoment(Moment)
 
@@ -78,11 +79,24 @@ const ScheduleContainer = () => {
   // endregion bookingForm
 
   // region computed
-  const dateRangeArray = Array.from(
-    moment
-      .range(moment(bookingFilters.from), moment(bookingFilters.to))
-      .by('day')
-  )
+  const dateRangeArray = useMemo(() => {
+    return Array.from(
+      moment
+        .range(
+          moment(
+            bookingFilters.from
+              ? bookingFilters.from
+              : new Date().toISOString().slice(0, 10) + ' 00:00'
+          ),
+          moment(
+            bookingFilters.to
+              ? bookingFilters.to
+              : dayjs().add(7, 'day').startOf('day').toISOString()
+          )
+        )
+        .by('day')
+    )
+  }, [bookingFilters.from, bookingFilters.to])
 
   type GroupByDepartment = {
     department: DepartmentModel

@@ -298,9 +298,15 @@ const PlaceClaimLine: React.FC<Props> = ({ booking, place, room }) => {
                 {t('Birth date')}:{' '}
               </Typography>
               <Typography>
-                {format(
-                  parseISO(booking.appUser.dob),
-                  i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+                {booking.appUser.dob ? (
+                  <>
+                    {format(
+                      parseISO(booking.appUser.dob),
+                      i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+                    )}
+                  </>
+                ) : (
+                  ''
                 )}
               </Typography>
             </Stack>

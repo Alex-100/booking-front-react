@@ -38,6 +38,8 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
     invalid,
     response,
     initialValues,
+    change,
+    edit,
   } = props
   console.log(initialValues)
   const matchSm = useMediaQuery((theme: any) => theme.breakpoints.up('md'))
@@ -99,7 +101,7 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
                 ))}
               </Field>
             </Stack>
-            <DateRangeFields form="groupBooking" />
+            <DateRangeFields form="groupBooking" change={change} edit={edit} />
 
             <Field name="placesId" component={PlaceSelector} isGroup />
             <Field name="userId" component={UserSelectorField} />

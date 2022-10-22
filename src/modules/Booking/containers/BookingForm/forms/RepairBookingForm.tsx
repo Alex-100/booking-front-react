@@ -43,6 +43,8 @@ const RepairBookingForm = reduxForm<BookingCreateForm, Props>({
     response,
     initialValues,
     initialPlace,
+    change,
+    edit,
   } = props
   console.log(initialValues)
   const matchSm = useMediaQuery((theme: any) => theme.breakpoints.up('md'))
@@ -131,7 +133,7 @@ const RepairBookingForm = reduxForm<BookingCreateForm, Props>({
                 ))}
               </Field>
             </Stack>
-            <DateRangeFields form="repairBooking" />
+            <DateRangeFields form="repairBooking" change={change} edit={edit} />
 
             <Field
               name="placeId"
