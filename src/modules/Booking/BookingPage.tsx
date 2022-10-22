@@ -37,7 +37,7 @@ const BookingPage = () => {
           </Typography>
           <Stack direction="row" spacing={4}>
             <DateRangeContainer />
-            <FiltersViewContainer />
+            {/* <FiltersViewContainer /> */}
           </Stack>
           <Tooltip title={t('Filters')}>
             <IconButton onClick={handleToggleFiltersModal}>
@@ -45,6 +45,7 @@ const BookingPage = () => {
             </IconButton>
           </Tooltip>
         </Toolbar>
+        <FiltersViewContainer />
         <Box sx={{ width: '100%' }}>
           <ScheduleContainer />
         </Box>
