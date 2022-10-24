@@ -27,6 +27,7 @@ import { DATE_FORMAT_TEMPLATE } from '../../../../constants'
 import { PlaceModel, RoomModel } from '../../../Room/types'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
+import { useMediaQuery } from '@mui/material'
 // @ts-ignore
 const moment = extendMoment(Moment)
 
@@ -122,13 +123,19 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
       return acc
     }, [] as GroupByDepartment[]) || []
 
+  const matchesSm = useMediaQuery((theme: any) => theme.breakpoints.up('sm'))
+  const widthMax700 = useMediaQuery('(max-width:700px)')
+  // const matchesMD = useMediaQuery((theme: any) => theme.breakpoints.up('md'))
+
   // endregion computed
   console.log(bookingFormOpen)
   return (
     <TableContainer
       sx={{
         maxWidth: '100%',
-        maxHeight: `calc(100vh - 64px - 72px - 64px - ${filterHeight}px)`,
+        maxHeight: `calc(100vh - 64px - 72px - 64px - ${filterHeight}px - ${
+          matchesSm ? 0 : 24
+        }px - ${widthMax700 ? 64 : 0}px)`,
         overflowY: 'auto',
       }}
     >
