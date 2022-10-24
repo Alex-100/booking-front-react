@@ -96,7 +96,7 @@ const CustomDrawer = styled(MuiDrawer, {
 const mdTheme = createTheme()
 
 const Dashboard: React.FC = ({ children }) => {
-  const widthMax950 = useMediaQuery('(max-width:950px)')
+  // const widthMax950 = useMediaQuery('(max-width:950px)')
   const widthMax700 = useMediaQuery('(max-width:700px)')
   const [open, setOpen] = React.useState(!widthMax700)
   const toggleDrawer = () => {
@@ -369,7 +369,8 @@ const Dashboard: React.FC = ({ children }) => {
           }}
         >
           {widthMax700 && <Toolbar />}
-          <Box sx={widthMax950 ? { m: 2 } : { mr: 5, ml: 5, mt: 4, mb: 4 }}>
+          {/* <Box sx={widthMax950 ? { m: 2 } : { mr: 5, ml: 5, mt: 4, mb: 4 }}> */}
+          <Box sx={{ m: 2 }}>
             {children}
             {!location.pathname.startsWith('/booking') && (
               <Box sx={{ mt: 4 }}>

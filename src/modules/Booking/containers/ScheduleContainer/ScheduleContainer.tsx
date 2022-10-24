@@ -30,7 +30,7 @@ import dayjs from 'dayjs'
 // @ts-ignore
 const moment = extendMoment(Moment)
 
-const ScheduleContainer = () => {
+const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
   const bookingFilters = useAppSelector((state) => state.bookingFilters)
   const { data, status } = useSearchQuery(bookingFilters)
 
@@ -128,7 +128,7 @@ const ScheduleContainer = () => {
     <TableContainer
       sx={{
         maxWidth: '100%',
-        maxHeight: 'calc(100vh - 64px - 72px - 64px)',
+        maxHeight: `calc(100vh - 64px - 72px - 64px - ${filterHeight}px)`,
         overflowY: 'auto',
       }}
     >

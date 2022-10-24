@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useLayoutEffect, useRef, useState } from 'react'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Paper from '@mui/material/Paper'
@@ -21,6 +21,21 @@ const BookingPage = () => {
 
   const handleToggleFiltersModal = () => setFiltersModalOpen(!filtersModalOpen)
   const { t } = useTranslation()
+
+  const filterContainerRef = useRef<HTMLDivElement>(null)
+
+  const [filterBlockHeight, setFilterBlockHeight] = useState(0)
+
+  useLayoutEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (entries.length >= 1) {
+        setFilterBlockHeight(entries[0].contentRect.height)
+      }
+    })
+    if (filterContainerRef.current)
+      resizeObserver.observe(filterContainerRef.current)
+    return () => resizeObserver.disconnect()
+  }, [filterContainerRef.current])
 
   return (
     <>
@@ -45,9 +60,12 @@ const BookingPage = () => {
             </IconButton>
           </Tooltip>
         </Toolbar>
-        <FiltersViewContainer />
+        <div ref={filterContainerRef}>
+          <FiltersViewContainer />
+        </div>
+
         <Box sx={{ width: '100%' }}>
-          <ScheduleContainer />
+          <ScheduleContainer filterHeight={filterBlockHeight} />
         </Box>
         <PaginationContainer />
       </Paper>
