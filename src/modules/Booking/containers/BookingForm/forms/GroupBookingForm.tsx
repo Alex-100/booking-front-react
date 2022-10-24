@@ -87,7 +87,6 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
                 label={t('Funding')}
                 component={renderSelectField}
                 required
-                disabled
                 validate={[validators.required]}
               >
                 {sourceFundingOptionsFn().map(([k, l]) => (
