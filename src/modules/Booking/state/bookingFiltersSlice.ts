@@ -107,6 +107,25 @@ const bookingFiltersSlice = createSlice({
       >
     ) {
       state[action.payload] = undefined
+
+      const storedToken = JSON.parse(localStorage.getItem('auth') || '{}')
+        .access_token
+
+      const jwt = jose.decodeJwt(storedToken)
+      const username = jwt.sub
+      if (username) {
+        localStorage.setItem(
+          `filters_${username}`,
+          JSON.stringify({
+            departmentId: state.departmentId,
+            hospitalId: state.hospitalId,
+            sourceFunding: state.sourceFunding,
+            typeOfBooking: state.typeOfBooking,
+            statusOfBooking: state.statusOfBooking,
+            labelId: state.labelId,
+          })
+        )
+      }
     },
   },
 })
