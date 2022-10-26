@@ -28,6 +28,8 @@ import { PlaceModel, RoomModel } from '../../../Room/types'
 import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useMediaQuery } from '@mui/material'
+import { useAuth } from 'hooks'
+import { useGetUserByUsernameQuery } from 'services'
 // @ts-ignore
 const moment = extendMoment(Moment)
 
@@ -36,6 +38,20 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
   const { data, status } = useSearchQuery(bookingFilters)
 
   const { t, i18n } = useTranslation()
+
+  const auth = useAuth()
+  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  const canEdit = React.useMemo(
+    () =>
+      user &&
+      user.roles &&
+      user.roles.filter((role) =>
+        ['admin', 'booking_and_room_edit'].includes(role.name)
+      ).length > 0
+        ? true
+        : false,
+    [user]
+  )
 
   // region bookingForm
   const [opened, setOpened] = React.useState<number[]>([])
@@ -367,12 +383,14 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
                             <Typography variant="caption">
                               {place.number}
                             </Typography>
-                            <IconButton
-                              size="small"
-                              onClick={handleOpenBookingForm(place, room)}
-                            >
-                              <AddCircleOutlineIcon />
-                            </IconButton>
+                            {canEdit && (
+                              <IconButton
+                                size="small"
+                                onClick={handleOpenBookingForm(place, room)}
+                              >
+                                <AddCircleOutlineIcon />
+                              </IconButton>
+                            )}
                           </Stack>
                         </TableCell>
                         {dateRangeArray.map((day, i) => (
@@ -426,7 +444,7 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
           ))}
         </TableBody>
       </Table>
-      {bookingFormOpen[0] && (
+      {bookingFormOpen[0] && canEdit && (
         <BookingFormContainer
           open={bookingFormOpen[0]}
           onClose={handleCloseBookingForm}
