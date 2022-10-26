@@ -83,8 +83,8 @@ const RoomDetailContainer: React.FC<RoomDetailContainerProps> = ({ id }) => {
             </Typography>
           </Stack>
           <EntityOptionsMenu
-            canEdit={auth.check('admin')}
-            canRemove={auth.check('admin')}
+            canEdit={auth.check('admin', 'booking_and_room_edit')}
+            canRemove={auth.check('admin', 'booking_and_room_edit')}
             onEdit={modals.onEdit(room)}
             onRemove={modals.onRemove(room)}
           />

@@ -5,6 +5,8 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 import EntityFormModal from './EntityFormModal'
+import { useAuth } from 'hooks'
+import { useGetUserByUsernameQuery } from 'services'
 
 interface Props {
   title: string
@@ -29,6 +31,20 @@ const EntityPage: React.FC<Props> = ({
     setOpen(!open)
   }
 
+  const auth = useAuth()
+  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  const canEdit = React.useMemo(
+    () =>
+      user &&
+      user.roles &&
+      user.roles.filter((role) =>
+        ['admin', 'booking_and_room_edit'].includes(role.name)
+      ).length > 0
+        ? true
+        : false,
+    [user]
+  )
+
   return (
     <Grid container spacing={3}>
       <Grid item xs={12}>
@@ -42,9 +58,16 @@ const EntityPage: React.FC<Props> = ({
           <Typography variant="h5" mr={3}>
             {title}
           </Typography>
-          <Button variant="text" startIcon={<AddIcon />} onClick={handleToggle}>
-            {createBtnTitle}
-          </Button>
+          {canEdit && (
+            <Button
+              variant="text"
+              startIcon={<AddIcon />}
+              onClick={handleToggle}
+            >
+              {createBtnTitle}
+            </Button>
+          )}
+
           <EntityFormModal
             onClose={handleToggle}
             open={open}
