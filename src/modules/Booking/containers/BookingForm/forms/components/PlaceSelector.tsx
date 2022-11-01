@@ -14,7 +14,10 @@ import MenuItem from '@mui/material/MenuItem'
 import { useGetAllLabelsQuery } from '../../../../../Label/label'
 import { useGetAllDepartmentsQuery } from '../../../../../Department/department'
 import { useGetAllHospitalsQuery } from '../../../../../Hospital/hospital'
-import { useGetAllRoomsQuery } from '../../../../../Room/services/roomService'
+import {
+  useGetAllRoomsQuery,
+  useGetPlacesCountQuery,
+} from '../../../../../Room/services/roomService'
 import Pagination from '@mui/material/Pagination'
 import { ListItemIcon, useMediaQuery } from '@mui/material'
 import ExpandLess from '@mui/icons-material/ExpandLess'
@@ -261,6 +264,13 @@ const PlaceSelector: React.FC<any> = (props) => {
 
   const { data } = useGetAllRoomsQuery({
     pageNumber: pageNumber - 1,
+    ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+  })
+
+  const {
+    data: placesCountInfo,
+    isLoading: placesCountInfoLoading,
+  } = useGetPlacesCountQuery({
     ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
   })
 
@@ -544,6 +554,27 @@ const PlaceSelector: React.FC<any> = (props) => {
                 </Select>
               </FormControl>
             </Stack>
+            {isGroup && (
+              <>
+                <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
+                  {placesCountInfoLoading ? (
+                    <></>
+                  ) : (
+                    <>
+                      {placesCountInfo && placesCountInfo.totalPlaces > 0 ? (
+                        <>
+                          {t('You can select {{count}} place', {
+                            count: placesCountInfo?.totalPlaces,
+                          })}
+                        </>
+                      ) : (
+                        <>{t('There are no places to choose')}</>
+                      )}
+                    </>
+                  )}
+                </Stack>
+              </>
+            )}
             <Stack spacing={1}>
               {isGroup && (
                 <Box
