@@ -110,6 +110,8 @@
   "You can select {{count}} place_many": "Вы можете выбрать {{count}} мест",
   "You can select {{count}} place_other": "Вы можете выбрать {{count}} мест",
   "There are no places to choose": "Нет мест для выбора",
+  "Place count": "Количество мест",
+  "Select places": "Выбрать места",
   "Nothing selected": "Ничего не выбрано",
   "Selected places": "Выбраные места",
   "Select ALL": "Выбрать все",

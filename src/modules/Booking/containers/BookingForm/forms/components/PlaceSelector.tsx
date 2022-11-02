@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
@@ -16,10 +16,11 @@ import { useGetAllDepartmentsQuery } from '../../../../../Department/department'
 import { useGetAllHospitalsQuery } from '../../../../../Hospital/hospital'
 import {
   useGetAllRoomsQuery,
+  useGetPlaceListForBookingMutation,
   useGetPlacesCountQuery,
 } from '../../../../../Room/services/roomService'
 import Pagination from '@mui/material/Pagination'
-import { ListItemIcon, useMediaQuery } from '@mui/material'
+import { ListItemIcon, TextField, useMediaQuery } from '@mui/material'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import Collapse from '@mui/material/Collapse'
@@ -34,6 +35,8 @@ import Dialog from '@mui/material/Dialog'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useTranslation } from 'react-i18next'
 import { SelectedPlaceInfo } from 'types/SelectedPlaceInfo'
+import { validators } from 'utils'
+import { LoadingButton } from '@mui/lab'
 
 interface RoomAccordionProps {
   room: RoomModel
@@ -267,6 +270,15 @@ const PlaceSelector: React.FC<any> = (props) => {
     ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
   })
 
+  const [
+    getPlaceList,
+    {
+      data: placeListForBookingByCount,
+      isSuccess: placeListForBookingByCountSuccess,
+      isLoading: placeListForBookingByCountLoading,
+    },
+  ] = useGetPlaceListForBookingMutation()
+
   const {
     data: placesCountInfo,
     isLoading: placesCountInfoLoading,
@@ -282,6 +294,30 @@ const PlaceSelector: React.FC<any> = (props) => {
   const [appliedSelectedPlaces, setAppliedSelectedPlaces] = useState<
     Array<SelectedPlaceInfo>
   >([])
+
+  const [placeCountByCount, setPlaceCountByCount] = useState('1')
+  const placeCountValid = useMemo(
+    () =>
+      validators.number(placeCountByCount) ||
+      validators.maxValue(placesCountInfo ? placesCountInfo?.totalPlaces : 1)(
+        (placeCountByCount as unknown) as number
+      ) ||
+      validators.minValue(1)((placeCountByCount as unknown) as number),
+    [placeCountByCount, placesCountInfo]
+  )
+
+  const handleSelectPlacesByFilterAndCount = () => {
+    // store.dispatch(
+    //   roomService.endpoints.getPlaceListForBooking.initiate({
+    //     numberOfPlaces: (placeCountByCount as unknown) as number,
+    //     ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+    //   })
+    // )
+    getPlaceList({
+      numberOfPlaces: (placeCountByCount as unknown) as number,
+      ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+    })
+  }
 
   useEffect(() => {
     if (placeInfo) {
@@ -458,6 +494,29 @@ const PlaceSelector: React.FC<any> = (props) => {
     }
   }
 
+  useEffect(() => {
+    console.log(
+      'PLACES_BY_COUNT',
+      placeListForBookingByCount,
+      placeListForBookingByCountSuccess,
+      placeListForBookingByCountLoading
+    )
+    if (
+      placeListForBookingByCount &&
+      placeListForBookingByCount.length > 0 &&
+      placeListForBookingByCountSuccess
+    ) {
+      input.onChange(placeListForBookingByCount)
+      // const selected = sel
+      setAppliedSelectedPlaces([])
+      handleToggleModal()
+    }
+  }, [
+    placeListForBookingByCount,
+    placeListForBookingByCountSuccess,
+    placeListForBookingByCountLoading,
+  ])
+
   const handleContinue = () => {
     // if (!checked) return
 
@@ -480,7 +539,7 @@ const PlaceSelector: React.FC<any> = (props) => {
       >
         <DialogTitle>{t('Select a place')}</DialogTitle>
         <DialogContent sx={{ overflow: 'visible' }}>
-          <Stack spacing={3} sx={{ width: 350 }}>
+          <Stack spacing={2} sx={{ width: 350 }}>
             <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
               <FormControl size="small" sx={{ width: '100%' }}>
                 <InputLabel id="rooms-list-container-filter-label">
@@ -556,7 +615,7 @@ const PlaceSelector: React.FC<any> = (props) => {
             </Stack>
             {isGroup && (
               <>
-                <Stack direction={'column'} spacing={2} sx={{ width: '100%' }}>
+                <Stack direction={'row'} spacing={2} sx={{ width: '100%' }}>
                   {placesCountInfoLoading ? (
                     <></>
                   ) : (
@@ -573,6 +632,29 @@ const PlaceSelector: React.FC<any> = (props) => {
                     </>
                   )}
                 </Stack>
+                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                  <TextField
+                    label={t('Place count')}
+                    value={placeCountByCount}
+                    onChange={(e) => setPlaceCountByCount(e.target.value)}
+                    error={Boolean(placeCountValid)}
+                    helperText={placeCountValid}
+                    inputProps={{
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    }}
+                  />
+                  <LoadingButton
+                    variant="outlined"
+                    sx={{ minWidth: '50%' }}
+                    disabled={Boolean(placeCountValid)}
+                    loading={placeListForBookingByCountLoading}
+                    onClick={handleSelectPlacesByFilterAndCount}
+                  >
+                    {t('Select places')}
+                  </LoadingButton>
+                </Stack>
+                <Divider />
               </>
             )}
             <Stack spacing={1}>
@@ -657,6 +739,13 @@ const PlaceSelector: React.FC<any> = (props) => {
         >
           <Typography>
             <Typography variant="subtitle2">{t('Place')}</Typography>
+            {placeListForBookingByCount && appliedSelectedPlaces.length === 0 && (
+              <Typography>
+                {t('selectedPlaceCount', {
+                  count: placeListForBookingByCount.length,
+                })}
+              </Typography>
+            )}
             <Typography>
               {appliedSelectedPlaces.length >= 5 ? (
                 <>
