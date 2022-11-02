@@ -319,6 +319,15 @@ const PlaceSelector: React.FC<any> = (props) => {
     })
   }
 
+  const handleSelectPlacesByFilterAll = () => {
+    if (placesCountInfo) {
+      getPlaceList({
+        numberOfPlaces: placesCountInfo?.totalPlaces,
+        ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+      })
+    }
+  }
+
   useEffect(() => {
     if (placeInfo) {
       setSelectedPlaces([placeInfo])
@@ -327,34 +336,34 @@ const PlaceSelector: React.FC<any> = (props) => {
     }
   }, [placeInfo])
 
-  const handleSelectAll = () => {
-    if (data) {
-      const tmpSelected: Array<SelectedPlaceInfo> = data.content
-        .map((room) => {
-          const { department, places } = room
-          const roomInfo = {
-            departmentId: department.id,
-            departmentName: department.name,
-            hospitalId: department.hospital.id,
-            hospitalName: department.hospital.name,
-            places,
-          }
-          return roomInfo.places.map((place) => ({
-            id: place.id,
-            number: place.number,
-            departmentId: roomInfo.departmentId,
-            departmentName: roomInfo.departmentName,
-            hospitalId: roomInfo.hospitalId,
-            hospitalName: roomInfo.hospitalName,
-            roomId: room.id,
-            roomNumber: room.roomNumber,
-          }))
-        })
-        .flat()
+  // const handleSelectAll = () => {
+  //   if (data) {
+  //     const tmpSelected: Array<SelectedPlaceInfo> = data.content
+  //       .map((room) => {
+  //         const { department, places } = room
+  //         const roomInfo = {
+  //           departmentId: department.id,
+  //           departmentName: department.name,
+  //           hospitalId: department.hospital.id,
+  //           hospitalName: department.hospital.name,
+  //           places,
+  //         }
+  //         return roomInfo.places.map((place) => ({
+  //           id: place.id,
+  //           number: place.number,
+  //           departmentId: roomInfo.departmentId,
+  //           departmentName: roomInfo.departmentName,
+  //           hospitalId: roomInfo.hospitalId,
+  //           hospitalName: roomInfo.hospitalName,
+  //           roomId: room.id,
+  //           roomNumber: room.roomNumber,
+  //         }))
+  //       })
+  //       .flat()
 
-      setSelectedPlaces(tmpSelected)
-    }
-  }
+  //     setSelectedPlaces(tmpSelected)
+  //   }
+  // }
 
   const handleToggle = (v: number) => {
     const currentIndex = checked.indexOf(v)
@@ -636,6 +645,8 @@ const PlaceSelector: React.FC<any> = (props) => {
                   <TextField
                     label={t('Place count')}
                     value={placeCountByCount}
+                    fullWidth
+                    size="small"
                     onChange={(e) => setPlaceCountByCount(e.target.value)}
                     error={Boolean(placeCountValid)}
                     helperText={placeCountValid}
@@ -644,14 +655,23 @@ const PlaceSelector: React.FC<any> = (props) => {
                       pattern: '[0-9]*',
                     }}
                   />
+                </Stack>
+                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
                   <LoadingButton
                     variant="outlined"
-                    sx={{ minWidth: '50%' }}
                     disabled={Boolean(placeCountValid)}
                     loading={placeListForBookingByCountLoading}
                     onClick={handleSelectPlacesByFilterAndCount}
                   >
                     {t('Select places')}
+                  </LoadingButton>
+                  <LoadingButton
+                    variant="outlined"
+                    disabled={Boolean(placeCountValid)}
+                    loading={placeListForBookingByCountLoading}
+                    onClick={handleSelectPlacesByFilterAll}
+                  >
+                    {t('Select ALL')}
                   </LoadingButton>
                 </Stack>
                 <Divider />
@@ -671,13 +691,13 @@ const PlaceSelector: React.FC<any> = (props) => {
                       ? t('Nothing selected')
                       : `${t('Selected places')}: ${selectedPlaces.length}`}
                   </Typography>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     sx={{ minWidth: 140 }}
                     onClick={handleSelectAll}
                   >
                     {t('Select ALL')}
-                  </Button>
+                  </Button> */}
                 </Box>
               )}
               <Paper variant="outlined">
