@@ -124,24 +124,27 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
     rooms: BookingRecordModel[]
   }
 
-  const groupedByDepartment =
-    data?.content.reduce((acc, current) => {
-      const accIndex = acc.findIndex(
-        (v) => v.department.id === current.department.id
-      )
+  const groupedByDepartment = useMemo(
+    () =>
+      data?.content.reduce((acc, current) => {
+        const accIndex = acc.findIndex(
+          (v) => v.department.id === current.department.id
+        )
 
-      if (accIndex >= 0) {
-        acc[accIndex].rooms.push(current)
+        if (accIndex >= 0) {
+          acc[accIndex].rooms.push(current)
+          return acc
+        }
+
+        acc.push({
+          department: current.department,
+          rooms: [current],
+        })
+
         return acc
-      }
-
-      acc.push({
-        department: current.department,
-        rooms: [current],
-      })
-
-      return acc
-    }, [] as GroupByDepartment[]) || []
+      }, [] as GroupByDepartment[]) || [],
+    [data]
+  )
 
   const matchesSm = useMediaQuery((theme: any) => theme.breakpoints.up('sm'))
   const widthMax700 = useMediaQuery('(max-width:700px)')
