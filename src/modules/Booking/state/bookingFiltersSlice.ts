@@ -93,6 +93,7 @@ const bookingFiltersSlice = createSlice({
     },
     setPageSize(state, action: PayloadAction<number>) {
       state.pageSize = action.payload
+      state.pageNumber = 0
     },
     removeFilter(
       state,
@@ -107,6 +108,7 @@ const bookingFiltersSlice = createSlice({
       >
     ) {
       state[action.payload] = undefined
+      state.pageNumber = 0
 
       const storedToken = JSON.parse(localStorage.getItem('auth') || '{}')
         .access_token

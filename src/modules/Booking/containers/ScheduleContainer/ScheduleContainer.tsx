@@ -148,7 +148,7 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
   // const matchesMD = useMediaQuery((theme: any) => theme.breakpoints.up('md'))
 
   // endregion computed
-  console.log(bookingFormOpen)
+  // console.log(bookingFormOpen)
   return (
     <TableContainer
       sx={{
