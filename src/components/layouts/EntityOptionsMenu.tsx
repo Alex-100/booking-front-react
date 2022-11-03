@@ -110,7 +110,7 @@ const EntityOptionsMenu: React.FC<EntityOptionsMenuProps> = ({
         e.stopPropagation()
       }}
     >
-      {onEdit !== undefined && (
+      {onEdit !== undefined && canEdit && (
         <Tooltip title={t('Edit')}>
           <IconButton onClick={handleEdit} size={size}>
             <EditIcon fontSize={size} />
@@ -118,11 +118,14 @@ const EntityOptionsMenu: React.FC<EntityOptionsMenuProps> = ({
         </Tooltip>
       )}
 
-      <Tooltip title={t('Remove')}>
-        <IconButton onClick={handleRemove} size={size}>
-          <DeleteIcon fontSize={size} />
-        </IconButton>
-      </Tooltip>
+      {canRemove && (
+        <Tooltip title={t('Remove')}>
+          <IconButton onClick={handleRemove} size={size}>
+            <DeleteIcon fontSize={size} />
+          </IconButton>
+        </Tooltip>
+      )}
+
       {to && (
         <Tooltip title={t('Open')}>
           <Link to={to}>

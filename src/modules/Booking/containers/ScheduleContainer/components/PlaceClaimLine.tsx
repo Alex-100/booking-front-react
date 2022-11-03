@@ -27,6 +27,8 @@ import {
   typeOfBookingOptionsFn,
 } from 'modules/Booking/constants'
 import { format, parseISO } from 'date-fns'
+import { useAuth } from 'hooks'
+import { useGetUserByUsernameQuery } from 'services'
 
 // @ts-ignore
 const moment = extendMoment(Moment)
@@ -64,6 +66,20 @@ const PlaceClaimLine: React.FC<Props> = ({ booking, place, room }) => {
     setAnchorEl(null)
   }
   const open = Boolean(anchorEl)
+
+  const auth = useAuth()
+  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  const canEdit = React.useMemo(
+    () =>
+      user &&
+      user.roles &&
+      user.roles.filter((role) =>
+        ['admin', 'booking_and_room_edit'].includes(role.name)
+      ).length > 0
+        ? true
+        : false,
+    [user]
+  )
 
   const isOverflow = moment(bookingFilters.to).isBefore(booking.leavingDate)
 
@@ -195,20 +211,32 @@ const PlaceClaimLine: React.FC<Props> = ({ booking, place, room }) => {
           </Typography>
           <Stack direction="row" spacing={1}>
             {booking.typeOfBooking !== TypeOfBookingEnum.GROUP && (
-              <IconButton size="small" onClick={handleToggleEditModal}>
+              <IconButton
+                size="small"
+                onClick={handleToggleEditModal}
+                disabled={!canEdit}
+              >
                 <EditIcon fontSize="small" />
               </IconButton>
             )}
 
             {booking.typeOfBooking === TypeOfBookingEnum.GROUP && (
               <>
-                <IconButton size="small" onClick={handleToggleGroupRemoveModal}>
+                <IconButton
+                  size="small"
+                  onClick={handleToggleGroupRemoveModal}
+                  disabled={!canEdit}
+                >
                   <DeleteIcon fontSize="small" />
                 </IconButton>
               </>
             )}
             {booking.typeOfBooking !== TypeOfBookingEnum.GROUP && (
-              <IconButton size="small" onClick={handleToggleRemoveModal}>
+              <IconButton
+                size="small"
+                onClick={handleToggleRemoveModal}
+                disabled={!canEdit}
+              >
                 <DeleteIcon fontSize="small" />
               </IconButton>
             )}
@@ -298,9 +326,15 @@ const PlaceClaimLine: React.FC<Props> = ({ booking, place, room }) => {
                 {t('Birth date')}:{' '}
               </Typography>
               <Typography>
-                {format(
-                  parseISO(booking.appUser.dob),
-                  i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+                {booking.appUser.dob ? (
+                  <>
+                    {format(
+                      parseISO(booking.appUser.dob),
+                      i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+                    )}
+                  </>
+                ) : (
+                  ''
                 )}
               </Typography>
             </Stack>

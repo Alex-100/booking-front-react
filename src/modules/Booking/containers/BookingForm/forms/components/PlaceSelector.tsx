@@ -39,6 +39,8 @@ interface RoomAccordionProps {
   isFirst?: boolean
   isGroup?: boolean
   selectPlace: (info: SelectedPlaceInfo) => void
+  // selectPlaceGroup: (places: Array<SelectedPlaceInfo>) => void
+  selectPlacesInRoom: (roomId: number) => void
   selected: Array<SelectedPlaceInfo>
 }
 
@@ -46,10 +48,12 @@ const RoomAccordion: React.FC<RoomAccordionProps> = (props) => {
   const {
     room,
     // checked,
-    onCheck,
+    // onCheck,
     isFirst,
     isGroup,
     selectPlace,
+    // selectPlaceGroup,
+    selectPlacesInRoom,
     selected,
   } = props
   const [open, setOpen] = React.useState(false)
@@ -72,13 +76,47 @@ const RoomAccordion: React.FC<RoomAccordionProps> = (props) => {
       roomId,
       roomNumber,
     }
-    onCheck(id)
+    // onCheck(id)
     selectPlace(selectedPlace)
   }
 
+  // const placesIds = useMemo(() => room.places.map((p) => p.id), [room])
+  // const placesInRoom = useMemo(
+  //   () => selected.filter((item) => item.roomId === room.id),
+  //   [selected, room]
+  // )
   const placesIds = room.places.map((p) => p.id)
   const placesInRoom = selected.filter((item) => item.roomId === room.id)
+
   // const includePlaces = placesIds.filter((p) => checked.includes(p))
+
+  const handleGroupClick = (
+    // e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) =>
+    // e: React.ChangeEvent<HTMLInputElement>
+
+    {
+      e.preventDefault()
+
+      // const places = room.places.map((place) => {
+      //   const selectedPlace: SelectedPlaceInfo = {
+      //     id: place.id,
+      //     number: place.number,
+      //     departmentId: room.department.id,
+      //     departmentName: room.department.name,
+      //     hospitalId: room.department.hospital.id,
+      //     hospitalName: room.department.hospital.name,
+      //     roomId: room.id,
+      //     roomNumber: room.roomNumber,
+      //   }
+      //   return selectedPlace
+      //   // selectPlace(selectedPlace)
+      // })
+      // selectPlaceGroup(places)
+      selectPlacesInRoom(room.id)
+      e.stopPropagation()
+    }
 
   return (
     <>
@@ -96,6 +134,47 @@ const RoomAccordion: React.FC<RoomAccordionProps> = (props) => {
                   border: '1px solid rgb(0 0 0 / 20%)',
                 }}
               />
+              {isGroup && (
+                <>
+                  <div>
+                    <ListItemIcon onClick={handleGroupClick}>
+                      <Checkbox
+                        // onClick={(e) => {
+                        //   e.preventDefault()
+                        // }}
+                        // onChange={handleGroupClick}
+                        indeterminate={
+                          placesInRoom.length > 0 &&
+                          placesInRoom.length !== placesIds.length
+                        }
+                        checked={placesInRoom.length === placesIds.length}
+                        disableRipple
+                      />
+                    </ListItemIcon>
+                  </div>
+                  {/* <ListItemButton
+                    onClick={handleGroupClick}
+                    sx={{ pl: 4, maxWidth: '142px', height: '42px' }}
+                    dense
+                  >
+                    <ListItemIcon>
+                      <Checkbox
+                        // onClick={(e) => {
+                        //   e.preventDefault()
+                        // }}
+                        // onChange={handleGroupClick}
+                        indeterminate={
+                          placesInRoom.length > 0 &&
+                          placesInRoom.length !== placesIds.length
+                        }
+                        checked={placesInRoom.length === placesIds.length}
+                        disableRipple
+                      />
+                    </ListItemIcon>
+                    <ListItemText primary={''} />
+                  </ListItemButton> */}
+                </>
+              )}
               <Typography variant="subtitle2">{room.roomNumber}</Typography>
               {isGroup && (
                 <Typography variant="caption">{`${placesInRoom.length}/${placesIds.length}`}</Typography>
@@ -262,6 +341,102 @@ const PlaceSelector: React.FC<any> = (props) => {
     }
   }
 
+  const getPlacesInRoom = (room: RoomModel): SelectedPlaceInfo[] => {
+    const { department, places } = room
+    const roomInfo = {
+      departmentId: department.id,
+      departmentName: department.name,
+      hospitalId: department.hospital.id,
+      hospitalName: department.hospital.name,
+      places,
+    }
+    return roomInfo.places.map((place) => ({
+      id: place.id,
+      number: place.number,
+      departmentId: roomInfo.departmentId,
+      departmentName: roomInfo.departmentName,
+      hospitalId: roomInfo.hospitalId,
+      hospitalName: roomInfo.hospitalName,
+      roomId: room.id,
+      roomNumber: room.roomNumber,
+    }))
+  }
+
+  const handleSelectRoom = (roomId: number) => {
+    if (data) {
+      // console.log('Try add room place', roomId)
+      const selectedRoom = data.content.find((room) => room.id === roomId)
+
+      const placesInRoom: SelectedPlaceInfo[] = selectedRoom
+        ? getPlacesInRoom(selectedRoom)
+        : []
+
+      setSelectedPlaces((prev) =>
+        prev.findIndex((item) => item.roomId === roomId) >= 0
+          ? prev.filter((item) => item.roomId !== roomId)
+          : [...prev, ...placesInRoom]
+      )
+      //   const tmp: Array<SelectedPlaceInfo> = selectedPlaces
+
+      //   const existRoom = tmp.findIndex((item) => item.roomId === roomId)
+      //   if (existRoom >= 0) {
+      //     const removed = tmp.filter((item) => item.roomId !== roomId)
+      //     console.log('Try remove ')
+      //     setSelectedPlaces(removed)
+      //   } else if (selectedRoom) {
+      //     const { department, places } = selectedRoom
+      //     const roomInfo = {
+      //       departmentId: department.id,
+      //       departmentName: department.name,
+      //       hospitalId: department.hospital.id,
+      //       hospitalName: department.hospital.name,
+      //       places,
+      //     }
+      //     const placesInRoom = roomInfo.places.map((place) => ({
+      //       id: place.id,
+      //       number: place.number,
+      //       departmentId: roomInfo.departmentId,
+      //       departmentName: roomInfo.departmentName,
+      //       hospitalId: roomInfo.hospitalId,
+      //       hospitalName: roomInfo.hospitalName,
+      //       roomId: selectedRoom.id,
+      //       roomNumber: selectedRoom.roomNumber,
+      //     }))
+
+      //     ////
+
+      //     tmp.push(...placesInRoom)
+      //     setSelectedPlaces(tmp)
+      //   }
+    }
+  }
+
+  /*   const handleSelectPlaceGroup = (places: Array<SelectedPlaceInfo>) => {
+    // const addingPlacesCount = places.length
+    const addingPlaceGroupIds = places.map((place) => place.id)
+    const tmp: Array<SelectedPlaceInfo> = selectedPlaces
+    // const findedPlaces: Array<SelectedPlaceInfo> = []
+    // for(let i=0; i< addingPlacesCount; i++){
+    //   const  findedPlace = selectedPlaces.find((place)=>place.id===places[i].id)
+    //   if (findedPlace){
+    //     findedPlaces.push(findedPlace)
+    //   }
+
+    // }
+    const diff = selectedPlaces.filter((place) =>
+      addingPlaceGroupIds.includes(place.id)
+    )
+    if (diff.length === 0) {
+      //
+      tmp = tmp.concat(places)
+    } else {
+      //
+    }
+    setSelectedPlaces(tmp)
+
+    console.log(tmp, places, diff)
+  } */
+
   const [open, setOpen] = React.useState(false)
   const handleToggleModal = () => {
     setOpen(!open)
@@ -405,6 +580,8 @@ const PlaceSelector: React.FC<any> = (props) => {
                         isGroup={isGroup}
                         selected={selectedPlaces}
                         selectPlace={handleSelect}
+                        // selectPlaceGroup={handleSelectPlaceGroup}
+                        selectPlacesInRoom={handleSelectRoom}
                       />
                     ))}
                 </List>

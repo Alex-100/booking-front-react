@@ -38,6 +38,7 @@ import RoomsTableHeader from './components/RoomsTableHeader'
 import Divider from '@mui/material/Divider'
 import { useTranslation } from 'react-i18next'
 import { CircularProgress } from '@mui/material'
+import { useGetUserByUsernameQuery } from 'services'
 
 const RoomsListContainer: React.FC = () => {
   const { t } = useTranslation()
@@ -116,6 +117,20 @@ const RoomsListContainer: React.FC = () => {
   }
   // endregion select
 
+  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  const canEdit = React.useMemo(
+    () =>
+      user &&
+      user.roles &&
+      user.roles.filter((role) =>
+        ['admin', 'booking_and_room_edit'].includes(role.name)
+      ).length > 0
+        ? true
+        : false,
+    [user]
+  )
+
+
   if (!data)
     return (
       <Box sx={{ width: '100%' }}>
@@ -157,7 +172,7 @@ const RoomsListContainer: React.FC = () => {
               </Typography>
             </Typography>
           )}
-          {selected.length > 0 && (
+          {selected.length > 0 && canEdit && (
             <Tooltip title={t('Remove rooms')}>
               <IconButton onClick={handleToggleRemoveModal}>
                 <DeleteIcon />
@@ -359,7 +374,7 @@ const RoomsListContainer: React.FC = () => {
                   )}
                   <TableCell component="th" scope="row" width={60}>
                     <EntityOptionsMenu
-                      canRemove={auth.check('admin')}
+                      canRemove={canEdit}
                       onRemove={modals.onRemove(row)}
                       to={`/rooms/${row.id}`}
                     />

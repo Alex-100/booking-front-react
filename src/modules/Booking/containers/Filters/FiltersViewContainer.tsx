@@ -1,11 +1,11 @@
 import React from 'react'
-import Stack from '@mui/material/Stack'
 import { useAppDispatch, useAppSelector } from '../../../../store'
 import Chip from '@mui/material/Chip'
 import { removeFilter } from '../../state/bookingFiltersSlice'
 import { useGetAllDepartmentsQuery } from '../../../Department/department'
 import { useGetAllLabelsQuery } from '../../../Label/label'
 import { useGetAllHospitalsQuery } from '../../../Hospital/hospital'
+import { Box } from '@mui/material'
 
 type FilterKeyType =
   | 'departmentId'
@@ -66,7 +66,19 @@ const FiltersViewContainer: React.FC = () => {
     `${k}: ${caseTitle(k as FilterKeyType, v)}`
 
   return (
-    <Stack spacing={2} direction="row">
+    <Box
+      sx={{
+        display: 'flex',
+        width: '100%',
+        paddingX: '24px',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        wordWrap: 'normal',
+        // gap: '8px',
+        flexWrap: 'wrap',
+        marginY: '4px',
+      }}
+    >
       {Object.entries(bookingFilters)
         .filter(bookingFiltersFilter)
         .map((filter) => (
@@ -74,9 +86,10 @@ const FiltersViewContainer: React.FC = () => {
             onDelete={handleRemove(filter[0] as FilterKeyType)}
             key={filter[0]}
             label={getFilterLabel(filter)}
+            sx={{ marginY: '4px', marginX: '4px' }}
           />
         ))}
-    </Stack>
+    </Box>
   )
 }
 

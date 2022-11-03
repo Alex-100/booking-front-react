@@ -38,6 +38,8 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
     invalid,
     response,
     initialValues,
+    change,
+    edit,
   } = props
   console.log(initialValues)
   const matchSm = useMediaQuery((theme: any) => theme.breakpoints.up('md'))
@@ -50,7 +52,7 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
         justifyContent="center"
         alignItems="flex-start"
         spacing={4}
-        width={!matchSm ? 250 : 640}
+        width={!matchSm ? '100%' : 640}
       >
         <Paper sx={{ p: 2, width: '100%' }} variant="outlined">
           <Typography variant="subtitle2" sx={{ mb: 2 }}>
@@ -85,7 +87,6 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
                 label={t('Funding')}
                 component={renderSelectField}
                 required
-                disabled
                 validate={[validators.required]}
               >
                 {sourceFundingOptionsFn().map(([k, l]) => (
@@ -99,7 +100,7 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
                 ))}
               </Field>
             </Stack>
-            <DateRangeFields form="groupBooking" />
+            <DateRangeFields form="groupBooking" change={change} edit={edit} />
 
             <Field name="placesId" component={PlaceSelector} isGroup />
             <Field name="userId" component={UserSelectorField} />

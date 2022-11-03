@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useMemo } from 'react'
 import Moment from 'moment'
 import { extendMoment } from 'moment-range'
 import { alpha } from '@mui/material/styles'
@@ -26,14 +26,32 @@ import Box from '@mui/material/Box'
 import { DATE_FORMAT_TEMPLATE } from '../../../../constants'
 import { PlaceModel, RoomModel } from '../../../Room/types'
 import { useTranslation } from 'react-i18next'
+import dayjs from 'dayjs'
+import { useMediaQuery } from '@mui/material'
+import { useAuth } from 'hooks'
+import { useGetUserByUsernameQuery } from 'services'
 // @ts-ignore
 const moment = extendMoment(Moment)
 
-const ScheduleContainer = () => {
+const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
   const bookingFilters = useAppSelector((state) => state.bookingFilters)
   const { data, status } = useSearchQuery(bookingFilters)
 
   const { t, i18n } = useTranslation()
+
+  const auth = useAuth()
+  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  const canEdit = React.useMemo(
+    () =>
+      user &&
+      user.roles &&
+      user.roles.filter((role) =>
+        ['admin', 'booking_and_room_edit'].includes(role.name)
+      ).length > 0
+        ? true
+        : false,
+    [user]
+  )
 
   // region bookingForm
   const [opened, setOpened] = React.useState<number[]>([])
@@ -78,11 +96,24 @@ const ScheduleContainer = () => {
   // endregion bookingForm
 
   // region computed
-  const dateRangeArray = Array.from(
-    moment
-      .range(moment(bookingFilters.from), moment(bookingFilters.to))
-      .by('day')
-  )
+  const dateRangeArray = useMemo(() => {
+    return Array.from(
+      moment
+        .range(
+          moment(
+            bookingFilters.from
+              ? bookingFilters.from
+              : new Date().toISOString().slice(0, 10) + ' 00:00'
+          ),
+          moment(
+            bookingFilters.to
+              ? bookingFilters.to
+              : dayjs().add(7, 'day').startOf('day').toISOString()
+          )
+        )
+        .by('day')
+    )
+  }, [bookingFilters.from, bookingFilters.to])
 
   type GroupByDepartment = {
     department: DepartmentModel
@@ -108,13 +139,19 @@ const ScheduleContainer = () => {
       return acc
     }, [] as GroupByDepartment[]) || []
 
+  const matchesSm = useMediaQuery((theme: any) => theme.breakpoints.up('sm'))
+  const widthMax700 = useMediaQuery('(max-width:700px)')
+  // const matchesMD = useMediaQuery((theme: any) => theme.breakpoints.up('md'))
+
   // endregion computed
   console.log(bookingFormOpen)
   return (
     <TableContainer
       sx={{
         maxWidth: '100%',
-        maxHeight: 'calc(100vh - 64px - 72px - 64px)',
+        maxHeight: `calc(100vh - 64px - 72px - 64px - ${filterHeight}px - ${
+          matchesSm ? 0 : 24
+        }px - ${widthMax700 ? 64 : 0}px)`,
         overflowY: 'auto',
       }}
     >
@@ -346,12 +383,14 @@ const ScheduleContainer = () => {
                             <Typography variant="caption">
                               {place.number}
                             </Typography>
-                            <IconButton
-                              size="small"
-                              onClick={handleOpenBookingForm(place, room)}
-                            >
-                              <AddCircleOutlineIcon />
-                            </IconButton>
+                            {canEdit && (
+                              <IconButton
+                                size="small"
+                                onClick={handleOpenBookingForm(place, room)}
+                              >
+                                <AddCircleOutlineIcon />
+                              </IconButton>
+                            )}
                           </Stack>
                         </TableCell>
                         {dateRangeArray.map((day, i) => (
@@ -405,7 +444,7 @@ const ScheduleContainer = () => {
           ))}
         </TableBody>
       </Table>
-      {bookingFormOpen[0] && (
+      {bookingFormOpen[0] && canEdit && (
         <BookingFormContainer
           open={bookingFormOpen[0]}
           onClose={handleCloseBookingForm}

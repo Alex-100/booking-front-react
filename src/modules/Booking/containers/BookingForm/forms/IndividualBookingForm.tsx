@@ -114,7 +114,7 @@ export const IndividualBookingForm = reduxForm<BookingCreateForm, Props>({
           justifyContent="center"
           alignItems="flex-start"
           spacing={4}
-          width={!matchSm ? 250 : 640}
+          width={!matchSm ? '100%' : 640}
         >
           <Paper sx={{ p: 2, width: '100%' }} variant="outlined">
             <Typography variant="subtitle2" sx={{ mb: 2 }}>

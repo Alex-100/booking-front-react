@@ -48,11 +48,11 @@ const UserForm = reduxForm<UserModel, FormProps>({
         direction="column"
         justifyContent="center"
         alignItems="flex-start"
-        spacing={matches ? 4 : 3}
+        spacing={matches ? 3 : 2}
         width={matches ? 600 : 250}
       >
         <UserExternalSearch onSelect={handleExternalUserSelect} />{' '}
-        <Stack spacing={3} direction={matches ? 'row' : 'column'} width="100%">
+        <Stack spacing={2} direction={matches ? 'row' : 'column'} width="100%">
           <Field
             name="name"
             label={t('Employe_Name')}

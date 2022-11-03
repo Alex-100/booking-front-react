@@ -11,6 +11,8 @@ import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 import GroupRoomForm from '../forms/GroupRoomForm'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from 'hooks'
+import { useGetUserByUsernameQuery } from 'services'
 
 const RoomsListPage: React.FC = () => {
   const [open, setOpen] = React.useState(false)
@@ -19,6 +21,20 @@ const RoomsListPage: React.FC = () => {
   const handleToggle = () => {
     setOpen(!open)
   }
+
+  const auth = useAuth()
+  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  const canEdit = React.useMemo(
+    () =>
+      user &&
+      user.roles &&
+      user.roles.filter((role) =>
+        ['admin', 'booking_and_room_edit'].includes(role.name)
+      ).length > 0
+        ? true
+        : false,
+    [user]
+  )
 
   return (
     <EntityPage
@@ -29,14 +45,17 @@ const RoomsListPage: React.FC = () => {
       mutation={useCreateRoomMutation}
       header={
         <>
-          <Button
-            variant="text"
-            startIcon={<AddIcon />}
-            onClick={handleToggle}
-            sx={{ ml: 2 }}
-          >
-            {t('New group')}
-          </Button>
+          {canEdit && (
+            <Button
+              variant="text"
+              startIcon={<AddIcon />}
+              onClick={handleToggle}
+              sx={{ ml: 2 }}
+            >
+              {t('New group')}
+            </Button>
+          )}
+
           <EntityFormModal
             onClose={handleToggle}
             open={open}
