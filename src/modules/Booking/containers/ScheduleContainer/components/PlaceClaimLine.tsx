@@ -27,8 +27,6 @@ import {
   typeOfBookingOptionsFn,
 } from 'modules/Booking/constants'
 import { format, parseISO } from 'date-fns'
-import { useAuth } from 'hooks'
-import { useGetUserByUsernameQuery } from 'services'
 
 // @ts-ignore
 const moment = extendMoment(Moment)
@@ -37,9 +35,10 @@ interface Props {
   place: PlaceModel
   room: RoomModel
   booking: BookingModel
+  canEdit: boolean
 }
 
-const PlaceClaimLine: React.FC<Props> = ({ booking, place, room }) => {
+const PlaceClaimLine: React.FC<Props> = ({ booking, place, room, canEdit }) => {
   const { t, i18n } = useTranslation()
   const bookingFilters = useAppSelector((state) => state.bookingFilters)
   const [openRemoveModal, setOpenRemoveModal] = React.useState(false)
@@ -66,20 +65,6 @@ const PlaceClaimLine: React.FC<Props> = ({ booking, place, room }) => {
     setAnchorEl(null)
   }
   const open = Boolean(anchorEl)
-
-  const auth = useAuth()
-  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
-  const canEdit = React.useMemo(
-    () =>
-      user &&
-      user.roles &&
-      user.roles.filter((role) =>
-        ['admin', 'booking_and_room_edit'].includes(role.name)
-      ).length > 0
-        ? true
-        : false,
-    [user]
-  )
 
   const isOverflow = moment(bookingFilters.to).isBefore(booking.leavingDate)
 

@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useMediaQuery } from '@mui/material'
 import { useAuth } from 'hooks'
-import { useGetUserByUsernameQuery } from 'services'
+// import { useGetUserByUsernameQuery } from 'services'
 // @ts-ignore
 const moment = extendMoment(Moment)
 
@@ -40,17 +40,21 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
   const { t, i18n } = useTranslation()
 
   const auth = useAuth()
-  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  // const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  // const canEdit = React.useMemo(
+  //   () =>
+  //     user &&
+  //     user.roles &&
+  //     user.roles.filter((role) =>
+  //       ['admin', 'booking_and_room_edit'].includes(role.name)
+  //     ).length > 0
+  //       ? true
+  //       : false,
+  //   [user]
+  // )
   const canEdit = React.useMemo(
-    () =>
-      user &&
-      user.roles &&
-      user.roles.filter((role) =>
-        ['admin', 'booking_and_room_edit'].includes(role.name)
-      ).length > 0
-        ? true
-        : false,
-    [user]
+    () => auth.check('admin', 'booking_and_room_edit'),
+    [auth]
   )
 
   // region bookingForm
@@ -432,6 +436,7 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
                                   booking={booking}
                                   place={place}
                                   room={room}
+                                  canEdit={canEdit}
                                 />
                               ))}
                           </TableCell>
