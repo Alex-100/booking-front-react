@@ -36,6 +36,20 @@ interface RoomsSearchParams extends PaginationParams {
   departmentId?: DepartmentModel['id'] | null
 }
 
+interface PlaceQueryInfoParams {
+  labelId?: number
+  hospitalId?: number
+  departmentId?: number
+}
+
+interface PalaceSelectorParams extends PlaceQueryInfoParams {
+  numberOfPlaces: number
+}
+
+interface PlacesQueryCount {
+  totalPlaces: number
+}
+
 export const roomService = createApi({
   reducerPath: 'roomService',
   baseQuery,
@@ -45,6 +59,14 @@ export const roomService = createApi({
       query: (params) =>
         `room/all?${new URLSearchParams(params as any).toString()}`,
       providesTags: ['Room'],
+    }),
+    getPlacesCount: builder.query<PlacesQueryCount, PlaceQueryInfoParams>({
+      query: (params) =>
+        `room/total/places?${new URLSearchParams(params as any).toString()}`,
+    }),
+    getPlaceListForBooking: builder.mutation<Array<number>, PalaceSelectorParams>({
+      query: (params) =>
+        `/room/list?${new URLSearchParams(params as any).toString()}`,
     }),
     getRoom: builder.query<
       RoomModel,
@@ -127,6 +149,8 @@ export const roomService = createApi({
 
 export const {
   useGetAllRoomsQuery,
+  useGetPlacesCountQuery,
+  useGetPlaceListForBookingMutation,
   useGetRoomQuery,
   useCreateRoomMutation,
   useCreateRoomGroupMutation,

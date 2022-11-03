@@ -29,7 +29,7 @@ import { useTranslation } from 'react-i18next'
 import dayjs from 'dayjs'
 import { useMediaQuery } from '@mui/material'
 import { useAuth } from 'hooks'
-import { useGetUserByUsernameQuery } from 'services'
+// import { useGetUserByUsernameQuery } from 'services'
 // @ts-ignore
 const moment = extendMoment(Moment)
 
@@ -40,17 +40,21 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
   const { t, i18n } = useTranslation()
 
   const auth = useAuth()
-  const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  // const { data: user } = useGetUserByUsernameQuery(auth.user.username)
+  // const canEdit = React.useMemo(
+  //   () =>
+  //     user &&
+  //     user.roles &&
+  //     user.roles.filter((role) =>
+  //       ['admin', 'booking_and_room_edit'].includes(role.name)
+  //     ).length > 0
+  //       ? true
+  //       : false,
+  //   [user]
+  // )
   const canEdit = React.useMemo(
-    () =>
-      user &&
-      user.roles &&
-      user.roles.filter((role) =>
-        ['admin', 'booking_and_room_edit'].includes(role.name)
-      ).length > 0
-        ? true
-        : false,
-    [user]
+    () => auth.check('admin', 'booking_and_room_edit'),
+    [auth]
   )
 
   // region bookingForm
@@ -120,31 +124,34 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
     rooms: BookingRecordModel[]
   }
 
-  const groupedByDepartment =
-    data?.content.reduce((acc, current) => {
-      const accIndex = acc.findIndex(
-        (v) => v.department.id === current.department.id
-      )
+  const groupedByDepartment = useMemo(
+    () =>
+      data?.content.reduce((acc, current) => {
+        const accIndex = acc.findIndex(
+          (v) => v.department.id === current.department.id
+        )
 
-      if (accIndex >= 0) {
-        acc[accIndex].rooms.push(current)
+        if (accIndex >= 0) {
+          acc[accIndex].rooms.push(current)
+          return acc
+        }
+
+        acc.push({
+          department: current.department,
+          rooms: [current],
+        })
+
         return acc
-      }
-
-      acc.push({
-        department: current.department,
-        rooms: [current],
-      })
-
-      return acc
-    }, [] as GroupByDepartment[]) || []
+      }, [] as GroupByDepartment[]) || [],
+    [data]
+  )
 
   const matchesSm = useMediaQuery((theme: any) => theme.breakpoints.up('sm'))
   const widthMax700 = useMediaQuery('(max-width:700px)')
   // const matchesMD = useMediaQuery((theme: any) => theme.breakpoints.up('md'))
 
   // endregion computed
-  console.log(bookingFormOpen)
+  // console.log(bookingFormOpen)
   return (
     <TableContainer
       sx={{
@@ -432,6 +439,7 @@ const ScheduleContainer = ({ filterHeight }: { filterHeight: number }) => {
                                   booking={booking}
                                   place={place}
                                   room={room}
+                                  canEdit={canEdit}
                                 />
                               ))}
                           </TableCell>

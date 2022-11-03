@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
@@ -14,9 +14,13 @@ import MenuItem from '@mui/material/MenuItem'
 import { useGetAllLabelsQuery } from '../../../../../Label/label'
 import { useGetAllDepartmentsQuery } from '../../../../../Department/department'
 import { useGetAllHospitalsQuery } from '../../../../../Hospital/hospital'
-import { useGetAllRoomsQuery } from '../../../../../Room/services/roomService'
+import {
+  useGetAllRoomsQuery,
+  useGetPlaceListForBookingMutation,
+  useGetPlacesCountQuery,
+} from '../../../../../Room/services/roomService'
 import Pagination from '@mui/material/Pagination'
-import { ListItemIcon, useMediaQuery } from '@mui/material'
+import { ListItemIcon, TextField, useMediaQuery } from '@mui/material'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import Collapse from '@mui/material/Collapse'
@@ -31,6 +35,8 @@ import Dialog from '@mui/material/Dialog'
 import FormHelperText from '@mui/material/FormHelperText'
 import { useTranslation } from 'react-i18next'
 import { SelectedPlaceInfo } from 'types/SelectedPlaceInfo'
+import { validators } from 'utils'
+import { LoadingButton } from '@mui/lab'
 
 interface RoomAccordionProps {
   room: RoomModel
@@ -264,6 +270,22 @@ const PlaceSelector: React.FC<any> = (props) => {
     ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
   })
 
+  const [
+    getPlaceList,
+    {
+      data: placeListForBookingByCount,
+      isSuccess: placeListForBookingByCountSuccess,
+      isLoading: placeListForBookingByCountLoading,
+    },
+  ] = useGetPlaceListForBookingMutation()
+
+  const {
+    data: placesCountInfo,
+    isLoading: placesCountInfoLoading,
+  } = useGetPlacesCountQuery({
+    ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+  })
+
   const [checked, setChecked] = React.useState([0])
   const [selectedPlaces, setSelectedPlaces] = useState<
     Array<SelectedPlaceInfo>
@@ -273,6 +295,41 @@ const PlaceSelector: React.FC<any> = (props) => {
     Array<SelectedPlaceInfo>
   >([])
 
+  const [placeCountByCount, setPlaceCountByCount] = useState('1')
+  const placeCountValid = useMemo(
+    () =>
+      validators.required(placeCountByCount) ||
+      validators.minLength(1)(placeCountByCount) ||
+      validators.number(placeCountByCount) ||
+      validators.maxValue(placesCountInfo ? placesCountInfo?.totalPlaces : 1)(
+        (placeCountByCount as unknown) as number
+      ) ||
+      validators.minValue(1)((placeCountByCount as unknown) as number),
+    [placeCountByCount, placesCountInfo]
+  )
+
+  const handleSelectPlacesByFilterAndCount = () => {
+    // store.dispatch(
+    //   roomService.endpoints.getPlaceListForBooking.initiate({
+    //     numberOfPlaces: (placeCountByCount as unknown) as number,
+    //     ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+    //   })
+    // )
+    getPlaceList({
+      numberOfPlaces: (placeCountByCount as unknown) as number,
+      ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+    })
+  }
+
+  const handleSelectPlacesByFilterAll = () => {
+    if (placesCountInfo) {
+      getPlaceList({
+        numberOfPlaces: placesCountInfo?.totalPlaces,
+        ...Object.fromEntries(Object.entries(filters).filter((v) => !!v[1])),
+      })
+    }
+  }
+
   useEffect(() => {
     if (placeInfo) {
       setSelectedPlaces([placeInfo])
@@ -281,34 +338,34 @@ const PlaceSelector: React.FC<any> = (props) => {
     }
   }, [placeInfo])
 
-  const handleSelectAll = () => {
-    if (data) {
-      const tmpSelected: Array<SelectedPlaceInfo> = data.content
-        .map((room) => {
-          const { department, places } = room
-          const roomInfo = {
-            departmentId: department.id,
-            departmentName: department.name,
-            hospitalId: department.hospital.id,
-            hospitalName: department.hospital.name,
-            places,
-          }
-          return roomInfo.places.map((place) => ({
-            id: place.id,
-            number: place.number,
-            departmentId: roomInfo.departmentId,
-            departmentName: roomInfo.departmentName,
-            hospitalId: roomInfo.hospitalId,
-            hospitalName: roomInfo.hospitalName,
-            roomId: room.id,
-            roomNumber: room.roomNumber,
-          }))
-        })
-        .flat()
+  // const handleSelectAll = () => {
+  //   if (data) {
+  //     const tmpSelected: Array<SelectedPlaceInfo> = data.content
+  //       .map((room) => {
+  //         const { department, places } = room
+  //         const roomInfo = {
+  //           departmentId: department.id,
+  //           departmentName: department.name,
+  //           hospitalId: department.hospital.id,
+  //           hospitalName: department.hospital.name,
+  //           places,
+  //         }
+  //         return roomInfo.places.map((place) => ({
+  //           id: place.id,
+  //           number: place.number,
+  //           departmentId: roomInfo.departmentId,
+  //           departmentName: roomInfo.departmentName,
+  //           hospitalId: roomInfo.hospitalId,
+  //           hospitalName: roomInfo.hospitalName,
+  //           roomId: room.id,
+  //           roomNumber: room.roomNumber,
+  //         }))
+  //       })
+  //       .flat()
 
-      setSelectedPlaces(tmpSelected)
-    }
-  }
+  //     setSelectedPlaces(tmpSelected)
+  //   }
+  // }
 
   const handleToggle = (v: number) => {
     const currentIndex = checked.indexOf(v)
@@ -448,6 +505,29 @@ const PlaceSelector: React.FC<any> = (props) => {
     }
   }
 
+  useEffect(() => {
+    console.log(
+      'PLACES_BY_COUNT',
+      placeListForBookingByCount,
+      placeListForBookingByCountSuccess,
+      placeListForBookingByCountLoading
+    )
+    if (
+      placeListForBookingByCount &&
+      placeListForBookingByCount.length > 0 &&
+      placeListForBookingByCountSuccess
+    ) {
+      input.onChange(placeListForBookingByCount)
+      // const selected = sel
+      setAppliedSelectedPlaces([])
+      handleToggleModal()
+    }
+  }, [
+    placeListForBookingByCount,
+    placeListForBookingByCountSuccess,
+    placeListForBookingByCountLoading,
+  ])
+
   const handleContinue = () => {
     // if (!checked) return
 
@@ -470,7 +550,7 @@ const PlaceSelector: React.FC<any> = (props) => {
       >
         <DialogTitle>{t('Select a place')}</DialogTitle>
         <DialogContent sx={{ overflow: 'visible' }}>
-          <Stack spacing={3} sx={{ width: 350 }}>
+          <Stack spacing={2} sx={{ width: 350 }}>
             <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
               <FormControl size="small" sx={{ width: '100%' }}>
                 <InputLabel id="rooms-list-container-filter-label">
@@ -544,6 +624,61 @@ const PlaceSelector: React.FC<any> = (props) => {
                 </Select>
               </FormControl>
             </Stack>
+            {isGroup && (
+              <>
+                <Stack direction={'row'} spacing={2} sx={{ width: '100%' }}>
+                  {placesCountInfoLoading ? (
+                    <></>
+                  ) : (
+                    <>
+                      {placesCountInfo && placesCountInfo.totalPlaces > 0 ? (
+                        <>
+                          {t('You can select {{count}} place', {
+                            count: placesCountInfo?.totalPlaces,
+                          })}
+                        </>
+                      ) : (
+                        <>{t('There are no places to choose')}</>
+                      )}
+                    </>
+                  )}
+                </Stack>
+                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                  <TextField
+                    label={t('Place count')}
+                    value={placeCountByCount}
+                    fullWidth
+                    size="small"
+                    onChange={(e) => setPlaceCountByCount(e.target.value)}
+                    error={Boolean(placeCountValid)}
+                    helperText={placeCountValid}
+                    inputProps={{
+                      inputMode: 'numeric',
+                      pattern: '[0-9]*',
+                    }}
+                  />
+                </Stack>
+                <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+                  <LoadingButton
+                    variant="outlined"
+                    disabled={Boolean(placeCountValid)}
+                    loading={placeListForBookingByCountLoading}
+                    onClick={handleSelectPlacesByFilterAndCount}
+                  >
+                    {t('Select places')}
+                  </LoadingButton>
+                  <LoadingButton
+                    variant="outlined"
+                    disabled={Boolean(placeCountValid)}
+                    loading={placeListForBookingByCountLoading}
+                    onClick={handleSelectPlacesByFilterAll}
+                  >
+                    {t('Select ALL')}
+                  </LoadingButton>
+                </Stack>
+                <Divider />
+              </>
+            )}
             <Stack spacing={1}>
               {isGroup && (
                 <Box
@@ -558,13 +693,13 @@ const PlaceSelector: React.FC<any> = (props) => {
                       ? t('Nothing selected')
                       : `${t('Selected places')}: ${selectedPlaces.length}`}
                   </Typography>
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     sx={{ minWidth: 140 }}
                     onClick={handleSelectAll}
                   >
                     {t('Select ALL')}
-                  </Button>
+                  </Button> */}
                 </Box>
               )}
               <Paper variant="outlined">
@@ -626,6 +761,13 @@ const PlaceSelector: React.FC<any> = (props) => {
         >
           <Typography>
             <Typography variant="subtitle2">{t('Place')}</Typography>
+            {placeListForBookingByCount && appliedSelectedPlaces.length === 0 && (
+              <Typography>
+                {t('selectedPlaceCount', {
+                  count: placeListForBookingByCount.length,
+                })}
+              </Typography>
+            )}
             <Typography>
               {appliedSelectedPlaces.length >= 5 ? (
                 <>
