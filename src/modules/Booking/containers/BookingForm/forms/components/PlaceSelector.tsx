@@ -298,6 +298,8 @@ const PlaceSelector: React.FC<any> = (props) => {
   const [placeCountByCount, setPlaceCountByCount] = useState('1')
   const placeCountValid = useMemo(
     () =>
+      validators.required(placeCountByCount) ||
+      validators.minLength(1)(placeCountByCount) ||
       validators.number(placeCountByCount) ||
       validators.maxValue(placesCountInfo ? placesCountInfo?.totalPlaces : 1)(
         (placeCountByCount as unknown) as number
