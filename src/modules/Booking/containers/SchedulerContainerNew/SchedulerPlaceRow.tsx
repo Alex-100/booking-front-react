@@ -4,12 +4,14 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import isWeekend from 'date-fns/isWeekend'
 import isSameDay from 'date-fns/isSameDay'
 import { BookingPlace } from 'modules/Booking/types/BookingRecordModel'
+import { PlaceModel } from 'modules/Room/types'
 
 interface SchedulerPlaceRowProps {
   place: BookingPlace
   canEdit: boolean
   dates: Array<Date>
   currentDate: Date
+  handleOpenBookingForPlace: (place: PlaceModel) => void
 }
 
 export const SchedulerPlaceRow = ({
@@ -17,6 +19,7 @@ export const SchedulerPlaceRow = ({
   canEdit,
   dates,
   currentDate,
+  handleOpenBookingForPlace,
 }: SchedulerPlaceRowProps) => {
   return (
     <>
@@ -38,6 +41,7 @@ export const SchedulerPlaceRow = ({
           {canEdit && (
             <IconButton
               size="small"
+              onClick={() => handleOpenBookingForPlace(place)}
               //   onClick={handleOpenBookingForm(place, room)}
             >
               <AddCircleOutlineIcon />

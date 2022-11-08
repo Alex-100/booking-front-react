@@ -12,6 +12,8 @@ import { DepartmentRow } from './DepartmentRow'
 import { TableVirtuoso } from 'react-virtuoso'
 import { SchedulerRoomsRow } from './SchedulerRoomsRow'
 import { SchedulerPlaceRow } from './SchedulerPlaceRow'
+import BookingFormContainer from '../BookingForm/BookingFormContainer'
+import { PlaceModel } from 'modules/Room/types'
 
 interface SchedulerContainedNewProps {
   filterHeight: number
@@ -69,6 +71,17 @@ export const SchedulerContainedNew = ({
   )
 
   const currentDate = useMemo(() => new Date(), [])
+
+  // const [isBookingOpen, setIsBookingOpen] = useState(false)
+  const [bookingPlace, setBookingPlace] = useState<PlaceModel | undefined>(
+    undefined
+  )
+
+  const handleOpenBooking = useCallback(
+    (place: PlaceModel) => setBookingPlace(place),
+    []
+  )
+  const handleCloseBooking = useCallback(() => setBookingPlace(undefined), [])
 
   return (
     <>
@@ -140,11 +153,19 @@ export const SchedulerContainedNew = ({
                   dates={dates}
                   currentDate={currentDate}
                   canEdit={true}
+                  handleOpenBookingForPlace={handleOpenBooking}
                 />
               )}
             </>
           )}
         />
+        {bookingPlace !== undefined && (
+          <BookingFormContainer
+            open={bookingPlace !== undefined}
+            onClose={handleCloseBooking}
+            place={bookingPlace}
+          />
+        )}
       </Box>
     </>
   )

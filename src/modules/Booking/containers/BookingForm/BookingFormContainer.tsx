@@ -39,7 +39,7 @@ interface Props {
   initialValues?: BookingCreateForm
   initialDate?: string
   place: PlaceModel
-  room: RoomModel
+  room?: RoomModel
 }
 
 const BookingFormContainer: React.FC<Props> = (props) => {
