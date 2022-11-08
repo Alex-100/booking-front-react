@@ -1,10 +1,4 @@
-import {
-  IconButton,
-  TableCell,
-  TableRow,
-  Typography,
-  alpha,
-} from '@mui/material'
+import { IconButton, TableCell, Typography, alpha } from '@mui/material'
 import { Stack } from '@mui/system'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import isWeekend from 'date-fns/isWeekend'
@@ -25,7 +19,7 @@ export const SchedulerPlaceRow = ({
   currentDate,
 }: SchedulerPlaceRowProps) => {
   return (
-    <TableRow>
+    <>
       <TableCell
         sx={{
           borderRight: 1,
@@ -91,6 +85,6 @@ export const SchedulerPlaceRow = ({
             ))} */}
         </TableCell>
       ))}
-    </TableRow>
+    </>
   )
 }

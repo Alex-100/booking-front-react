@@ -1,7 +1,13 @@
 import ru from 'date-fns/locale/ru'
 import en from 'date-fns/locale/en-US'
 import format from 'date-fns/format'
-import { GroupedDaysList } from './interfaces'
+import {
+  GroupedDaysList,
+  SchedulerPlaceRowData,
+  SchedulerRowsData,
+  SchedulerRowInfo,
+} from './interfaces'
+import { BookingRecordModel } from 'modules/Booking/types'
 
 export const getDateLocale = (lc: string) => {
   if (lc === 'ru') return ru
@@ -22,7 +28,47 @@ export const groupByMonth = (dates: Array<Date>, locale: Locale) =>
     return data
   }, [])
 
+export const normalizeSchedulerData = (
+  data: Array<BookingRecordModel>,
+  collapsed: Array<number>
+): SchedulerRowsData => {
+  let curDep: number = 0
 
-export const normalize = () => {
-  
+  const normalize = data.reduce<SchedulerRowsData>((acc, item) => {
+    const tmp: SchedulerRowsData = Array.from(acc)
+
+    if (curDep !== item.department.id) {
+      curDep = item.department.id
+      const dep: SchedulerRowInfo = {
+        type: 'department',
+        id: item.department.id,
+        departmentName: item.department.name,
+        hospitalName: item.department.hospital.name,
+      }
+      tmp.push(dep)
+    }
+
+    const room: SchedulerRowInfo = {
+      type: 'room',
+      id: item.id,
+      capacity: item.capacity,
+      label: item.label,
+      room: item.roomNumber,
+    }
+    tmp.push(room)
+
+    if (!collapsed.includes(item.id)) {
+      const placesInfo: Array<SchedulerPlaceRowData> = item.places.map(
+        (place) => ({
+          type: 'place',
+          place,
+        })
+      )
+      tmp.push(...placesInfo)
+    }
+
+    return tmp
+  }, [])
+
+  return normalize
 }

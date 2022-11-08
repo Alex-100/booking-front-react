@@ -1,4 +1,4 @@
-import { TableCell, TableHead, TableRow, Typography } from '@mui/material'
+import { TableCell, TableRow, Typography } from '@mui/material'
 import isSameDay from 'date-fns/isSameDay'
 import format from 'date-fns/format'
 import isWeekend from 'date-fns/isWeekend'
@@ -20,15 +20,16 @@ export const SchedulerHeader = ({
 }: SchedulerHeaderProps) => {
   const { t } = useTranslation()
   return (
-    <TableHead>
+    <>
       <TableRow>
         <TableCell
           sx={{
             minWidth: 140,
             borderRight: 1,
+            borderTop: 1,
             borderColor: 'divider',
             position: 'sticky',
-            zIndex: 110,
+            zIndex: 210,
             left: 0,
             background: 'white',
             borderBottom: 'none',
@@ -62,7 +63,7 @@ export const SchedulerHeader = ({
             borderTop: 1,
             borderColor: 'divider',
             position: 'sticky',
-            zIndex: 120,
+            zIndex: 220,
             left: 0,
             background: 'white',
           }}
@@ -98,6 +99,6 @@ export const SchedulerHeader = ({
           </TableCell>
         ))}
       </TableRow>
-    </TableHead>
+    </>
   )
 }

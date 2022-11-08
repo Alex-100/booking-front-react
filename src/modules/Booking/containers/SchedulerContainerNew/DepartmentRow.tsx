@@ -1,4 +1,4 @@
-import { Box, TableCell, TableRow, Typography } from '@mui/material'
+import { Box, TableCell, Typography } from '@mui/material'
 
 interface DepartmentRowProps {
   departmentName: string
@@ -11,7 +11,7 @@ export const DepartmentRow = ({
   hospitalName,
   datesCount,
 }: DepartmentRowProps) => (
-  <TableRow>
+  <>
     <TableCell
       sx={{
         bgcolor: (theme: any) => theme.palette.grey.A200,
@@ -54,5 +54,5 @@ export const DepartmentRow = ({
         borderColor: 'divider',
       }}
     />
-  </TableRow>
+  </>
 )
