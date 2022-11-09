@@ -6,8 +6,9 @@ import parseISO from 'date-fns/parseISO'
 import { BookingModel } from 'modules/Booking/types'
 import { TypeOfBookingEnum } from 'modules/Booking/types/enums'
 import { PlaceModel } from 'modules/Room/types'
-import { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useAppSelector } from 'store'
+import { PlaceLinePoppover } from './PlaceLinePoppover'
 
 interface PlaceLineProps {
   place: PlaceModel
@@ -90,9 +91,21 @@ export const PlaceLine = ({ place, booking }: PlaceLineProps) => {
     }
   })(booking.typeOfBooking)
 
-  const handleClickOnBookingLine = () => {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+
+  const handleClickOnBookingLine = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     console.log(place)
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget)
   }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const open = useMemo(() => Boolean(anchorEl), [anchorEl])
 
   return (
     <>
@@ -122,6 +135,15 @@ export const PlaceLine = ({ place, booking }: PlaceLineProps) => {
           onClick={handleClickOnBookingLine}
         />
       </Box>
+      {open && (
+        <PlaceLinePoppover
+          open={open}
+          anchorEl={anchorEl}
+          booking={booking}
+          handleClose={handleClose}
+          canEdit={true}
+        />
+      )}
     </>
   )
 }
