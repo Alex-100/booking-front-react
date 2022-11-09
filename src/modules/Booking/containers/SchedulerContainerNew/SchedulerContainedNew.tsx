@@ -132,7 +132,13 @@ export const SchedulerContainedNew = ({
           data={normalizedPlaces}
           totalCount={normalizedPlaces.length}
           components={{
-            TableHead: TableHead,
+            TableHead: ({ style, ...props }) => (
+              <TableHead
+                {...props}
+                style={{ zIndex: 280, position: 'sticky', top: '0px' }}
+              />
+            ),
+            // TableHead: TableHead,
             TableRow: TableRow,
           }}
           atTopThreshold={20}
