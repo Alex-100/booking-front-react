@@ -12,7 +12,7 @@ import {
   //   useRemoveBookingGroupMutation,
   useRemoveBookingMutation,
 } from '../../state/bookingService'
-// import BookingFormContainer from '../BookingForm/BookingFormContainer'
+import BookingFormContainer from '../BookingForm/BookingFormContainer'
 // import { useAppSelector } from '../../../../store'
 import { TypeOfBookingEnum } from '../../types/enums'
 // import { PlaceModel, RoomModel } from '../../../Room/types'
@@ -23,7 +23,8 @@ import {
   typeOfBookingOptionsFn,
 } from 'modules/Booking/constants'
 import { format, parseISO } from 'date-fns'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { PlaceModel } from 'modules/Room/types'
 
 interface PlaceLinePoppoverProps {
   booking: BookingModel
@@ -31,10 +32,12 @@ interface PlaceLinePoppoverProps {
   handleClose: () => void
   canEdit: boolean
   anchorEl: HTMLButtonElement | null
+  place: PlaceModel
 }
 
 export const PlaceLinePoppover = ({
   booking,
+  place,
   open,
   handleClose,
   canEdit,
@@ -46,6 +49,25 @@ export const PlaceLinePoppover = ({
   const handleToggleRemoveModal = () => {
     setOpenRemoveModal(!openRemoveModal)
   }
+  const [openEditModal, setOpenEditModal] = useState(false)
+  const handleToggleEditModal = () => {
+    setOpenEditModal(!openEditModal)
+  }
+
+  const formData = useMemo(
+    () => ({
+      ...booking,
+      placeId: place.id,
+      comboRateId: booking.comboRate?.id,
+      userId: booking.appUser.id,
+      sendById: booking.sentByCompany?.id,
+      enteringDateD: '',
+      enteringTime: '',
+      leavingDateD: '',
+      leavingTime: '',
+    }),
+    [booking, place]
+  )
 
   return (
     <>
@@ -78,7 +100,7 @@ export const PlaceLinePoppover = ({
             {booking.typeOfBooking !== TypeOfBookingEnum.GROUP && (
               <IconButton
                 size="small"
-                // onClick={handleToggleEditModal}
+                onClick={handleToggleEditModal}
                 disabled={!canEdit}
               >
                 <EditIcon fontSize="small" />
@@ -106,15 +128,15 @@ export const PlaceLinePoppover = ({
               </IconButton>
             )}
 
-            {/* {openEditModal && (
+            {openEditModal && (
               <BookingFormContainer
                 open={openEditModal}
                 onClose={handleToggleEditModal}
                 place={place}
-                room={room}
+                // room={room}
                 initialValues={formData}
               />
-            )} */}
+            )}
           </Stack>
         </Stack>
         <Stack spacing={1} sx={{ p: 2 }}>

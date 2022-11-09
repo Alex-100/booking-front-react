@@ -140,6 +140,7 @@ export const PlaceLine = ({ place, booking }: PlaceLineProps) => {
           open={open}
           anchorEl={anchorEl}
           booking={booking}
+          place={place}
           handleClose={handleClose}
           canEdit={true}
         />
