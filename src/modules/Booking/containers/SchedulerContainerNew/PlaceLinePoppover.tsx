@@ -9,7 +9,7 @@ import { getUserShortName } from '../../../../utils'
 import Paper from '@mui/material/Paper'
 import EntityRemoveModal from '../../../../components/layouts/EntityRemoveModal'
 import {
-  //   useRemoveBookingGroupMutation,
+  useRemoveBookingGroupMutation,
   useRemoveBookingMutation,
 } from '../../state/bookingService'
 import BookingFormContainer from '../BookingForm/BookingFormContainer'
@@ -52,6 +52,11 @@ export const PlaceLinePoppover = ({
   const [openEditModal, setOpenEditModal] = useState(false)
   const handleToggleEditModal = () => {
     setOpenEditModal(!openEditModal)
+  }
+
+  const [openGroupRemoveModal, setOpenGroupRemoveModal] = useState(false)
+  const handleToggleGroupRemoveModal = () => {
+    setOpenGroupRemoveModal(!openGroupRemoveModal)
   }
 
   const formData = useMemo(
@@ -111,7 +116,7 @@ export const PlaceLinePoppover = ({
               <>
                 <IconButton
                   size="small"
-                  //   onClick={handleToggleGroupRemoveModal}
+                  onClick={handleToggleGroupRemoveModal}
                   disabled={!canEdit}
                 >
                   <DeleteIcon fontSize="small" />
@@ -248,6 +253,13 @@ export const PlaceLinePoppover = ({
         entityData={booking.id}
         title={t('Do you want to delete a booking item?')}
         mutation={useRemoveBookingMutation}
+      />
+      <EntityRemoveModal
+        open={openGroupRemoveModal}
+        onClose={handleToggleGroupRemoveModal}
+        entityData={booking.groupBookingId}
+        title={t('Do you want to delete a booking group?')}
+        mutation={useRemoveBookingGroupMutation}
       />
     </>
   )
