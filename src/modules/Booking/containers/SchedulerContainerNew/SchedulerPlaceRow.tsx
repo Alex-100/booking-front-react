@@ -13,6 +13,7 @@ interface SchedulerPlaceRowProps {
   dates: Array<Date>
   currentDate: Date
   handleOpenBookingForPlace: (place: PlaceModel) => void
+  handleOpenBookingForPlaceAndDate: (place: PlaceModel, date: Date) => void
 }
 
 export const SchedulerPlaceRow = ({
@@ -21,6 +22,7 @@ export const SchedulerPlaceRow = ({
   dates,
   currentDate,
   handleOpenBookingForPlace,
+  handleOpenBookingForPlaceAndDate,
 }: SchedulerPlaceRowProps) => {
   return (
     <>
@@ -76,6 +78,7 @@ export const SchedulerPlaceRow = ({
             }),
           }}
           key={i}
+          onClick={() => handleOpenBookingForPlaceAndDate(place, date)}
           //   onClick={handleOpenBookingFormByDate(place, room, moment(day))}
         >
           {i === 0 &&

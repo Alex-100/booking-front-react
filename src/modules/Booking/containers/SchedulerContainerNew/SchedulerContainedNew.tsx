@@ -14,9 +14,15 @@ import { SchedulerRoomsRow } from './SchedulerRoomsRow'
 import { SchedulerPlaceRow } from './SchedulerPlaceRow'
 import BookingFormContainer from '../BookingForm/BookingFormContainer'
 import { PlaceModel } from 'modules/Room/types'
+import format from 'date-fns/format'
 
 interface SchedulerContainedNewProps {
   filterHeight: number
+}
+
+interface BookingPlaceParam {
+  place: PlaceModel
+  date: Date | undefined
 }
 
 export const SchedulerContainedNew = ({
@@ -72,16 +78,24 @@ export const SchedulerContainedNew = ({
 
   const currentDate = useMemo(() => new Date(), [])
 
-  // const [isBookingOpen, setIsBookingOpen] = useState(false)
-  const [bookingPlace, setBookingPlace] = useState<PlaceModel | undefined>(
-    undefined
-  )
+  const [bookingPlaceParam, setBookingPlaceParam] = useState<
+    BookingPlaceParam | undefined
+  >(undefined)
 
   const handleOpenBooking = useCallback(
-    (place: PlaceModel) => setBookingPlace(place),
+    (place: PlaceModel) => setBookingPlaceParam({ place, date: undefined }),
     []
   )
-  const handleCloseBooking = useCallback(() => setBookingPlace(undefined), [])
+
+  const handleOpenBookingByDate = useCallback(
+    (place: PlaceModel, date: Date) => setBookingPlaceParam({ place, date }),
+    []
+  )
+
+  const handleCloseBooking = useCallback(
+    () => setBookingPlaceParam(undefined),
+    []
+  )
 
   return (
     <>
@@ -154,16 +168,22 @@ export const SchedulerContainedNew = ({
                   currentDate={currentDate}
                   canEdit={true}
                   handleOpenBookingForPlace={handleOpenBooking}
+                  handleOpenBookingForPlaceAndDate={handleOpenBookingByDate}
                 />
               )}
             </>
           )}
         />
-        {bookingPlace !== undefined && (
+        {bookingPlaceParam !== undefined && (
           <BookingFormContainer
-            open={bookingPlace !== undefined}
+            open={bookingPlaceParam !== undefined}
             onClose={handleCloseBooking}
-            place={bookingPlace}
+            place={bookingPlaceParam.place}
+            initialDate={
+              bookingPlaceParam.date !== undefined
+                ? format(bookingPlaceParam.date, 'yyyy-MM-dd HH:mm')
+                : undefined
+            }
           />
         )}
       </Box>
