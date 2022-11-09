@@ -7,11 +7,11 @@ import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { getUserShortName } from '../../../../utils'
 import Paper from '@mui/material/Paper'
-// import EntityRemoveModal from '../../../../components/layouts/EntityRemoveModal'
-// import {
-//   useRemoveBookingGroupMutation,
-//   useRemoveBookingMutation,
-// } from '../../state/bookingService'
+import EntityRemoveModal from '../../../../components/layouts/EntityRemoveModal'
+import {
+  //   useRemoveBookingGroupMutation,
+  useRemoveBookingMutation,
+} from '../../state/bookingService'
 // import BookingFormContainer from '../BookingForm/BookingFormContainer'
 // import { useAppSelector } from '../../../../store'
 import { TypeOfBookingEnum } from '../../types/enums'
@@ -23,6 +23,7 @@ import {
   typeOfBookingOptionsFn,
 } from 'modules/Booking/constants'
 import { format, parseISO } from 'date-fns'
+import { useState } from 'react'
 
 interface PlaceLinePoppoverProps {
   booking: BookingModel
@@ -40,6 +41,11 @@ export const PlaceLinePoppover = ({
   anchorEl,
 }: PlaceLinePoppoverProps) => {
   const { t, i18n } = useTranslation()
+
+  const [openRemoveModal, setOpenRemoveModal] = useState(false)
+  const handleToggleRemoveModal = () => {
+    setOpenRemoveModal(!openRemoveModal)
+  }
 
   return (
     <>
@@ -93,7 +99,7 @@ export const PlaceLinePoppover = ({
             {booking.typeOfBooking !== TypeOfBookingEnum.GROUP && (
               <IconButton
                 size="small"
-                // onClick={handleToggleRemoveModal}
+                onClick={handleToggleRemoveModal}
                 disabled={!canEdit}
               >
                 <DeleteIcon fontSize="small" />
@@ -214,6 +220,13 @@ export const PlaceLinePoppover = ({
           </Paper>
         </Stack>
       </Popover>
+      <EntityRemoveModal
+        open={openRemoveModal}
+        onClose={handleToggleRemoveModal}
+        entityData={booking.id}
+        title={t('Do you want to delete a booking item?')}
+        mutation={useRemoveBookingMutation}
+      />
     </>
   )
 }
