@@ -5,6 +5,7 @@ import isWeekend from 'date-fns/isWeekend'
 import isSameDay from 'date-fns/isSameDay'
 import { BookingPlace } from 'modules/Booking/types/BookingRecordModel'
 import { PlaceModel } from 'modules/Room/types'
+import { PlaceLine } from './PlaceLine'
 
 interface SchedulerPlaceRowProps {
   place: BookingPlace
@@ -77,6 +78,10 @@ export const SchedulerPlaceRow = ({
           key={i}
           //   onClick={handleOpenBookingFormByDate(place, room, moment(day))}
         >
+          {i === 0 &&
+            place.bookings.map((booking) => (
+              <PlaceLine key={booking.id} booking={booking} place={place} />
+            ))}
           {/* {i === 0 &&
             place.bookings.map((booking) => (
               <PlaceClaimLine
