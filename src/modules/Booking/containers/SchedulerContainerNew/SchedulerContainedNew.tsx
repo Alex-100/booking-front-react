@@ -22,6 +22,7 @@ import { SchedulerPlaceRow } from './SchedulerPlaceRow'
 import BookingFormContainer from '../BookingForm/BookingFormContainer'
 import { PlaceModel } from 'modules/Room/types'
 import format from 'date-fns/format'
+import { useAuth } from 'hooks'
 
 interface SchedulerContainedNewProps {
   filterHeight: number
@@ -104,6 +105,11 @@ export const SchedulerContainedNew = ({
     []
   )
 
+  const auth = useAuth()
+  const canEdit = useMemo(() => auth.check('admin', 'booking_and_room_edit'), [
+    auth,
+  ])
+
   return (
     <>
       <Box
@@ -185,7 +191,7 @@ export const SchedulerContainedNew = ({
                   place={item.place}
                   dates={dates}
                   currentDate={currentDate}
-                  canEdit={true}
+                  canEdit={canEdit}
                   handleOpenBookingForPlace={handleOpenBooking}
                   handleOpenBookingForPlaceAndDate={handleOpenBookingByDate}
                 />

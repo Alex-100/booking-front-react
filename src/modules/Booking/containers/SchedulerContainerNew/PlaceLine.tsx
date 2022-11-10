@@ -13,9 +13,10 @@ import { PlaceLinePoppover } from './PlaceLinePoppover'
 interface PlaceLineProps {
   place: PlaceModel
   booking: BookingModel
+  canEdit: boolean
 }
 
-export const PlaceLine = ({ place, booking }: PlaceLineProps) => {
+export const PlaceLine = ({ place, booking, canEdit }: PlaceLineProps) => {
   const bookingFilters = useAppSelector((state) => state.bookingFilters)
 
   const isOverflow = isBefore(
@@ -142,7 +143,7 @@ export const PlaceLine = ({ place, booking }: PlaceLineProps) => {
           booking={booking}
           place={place}
           handleClose={handleClose}
-          canEdit={true}
+          canEdit={canEdit}
         />
       )}
     </>

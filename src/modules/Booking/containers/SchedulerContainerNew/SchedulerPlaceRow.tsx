@@ -83,7 +83,12 @@ export const SchedulerPlaceRow = ({
         >
           {i === 0 &&
             place.bookings.map((booking) => (
-              <PlaceLine key={booking.id} booking={booking} place={place} />
+              <PlaceLine
+                key={booking.id}
+                booking={booking}
+                place={place}
+                canEdit={canEdit}
+              />
             ))}
           {/* {i === 0 &&
             place.bookings.map((booking) => (
