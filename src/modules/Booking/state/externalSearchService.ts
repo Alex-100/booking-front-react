@@ -79,9 +79,7 @@ export const externalSearchService = createApi({
       ExternalSearchServiceParams<PaginationParams>
     >({
       query: ({ params, externalApi }) => ({
-        url: `${
-          externalApi.externalApiConnectorString
-        }/case/search?${getURLSearchParams(params)}`,
+        url: `/api_external/case/search?${getURLSearchParams(params)}`,
         headers: headers(externalApi),
         method: 'get',
       }),
@@ -91,9 +89,7 @@ export const externalSearchService = createApi({
       ExternalSearchServiceParams<PaginationParams>
     >({
       query: ({ params, externalApi }) => ({
-        url: `${
-          externalApi.externalApiConnectorString
-        }/employees?${getURLSearchParams(params)}`,
+        url: `/api_external/employees?${getURLSearchParams(params)}`,
         headers: headers(externalApi),
         method: 'get',
       }),
@@ -103,7 +99,7 @@ export const externalSearchService = createApi({
       ExternalSearchServiceParams<string>
     >({
       query: ({ params, externalApi }) => ({
-        url: `${externalApi.externalApiConnectorString}/search/byId/${params}`,
+        url: `/api_external/search/byId/${params}`,
         headers: headers(externalApi),
         method: 'get',
       }),

@@ -60,6 +60,7 @@ const ApplicationForm = reduxForm<ApplicationModel, FormProps>({
           name="externalApiConnectorString"
           label={t('External API connector string')}
           component={renderTextField}
+          disabled
         />
         <Field
           name="externalApiUsername"
