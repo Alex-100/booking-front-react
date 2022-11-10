@@ -8,7 +8,7 @@ import 'reseter.css'
 import './index.css'
 
 // import App from './App'
-import { API_URL } from './constants'
+// import { API_URL } from './constants'
 
 import './i18n'
 import 'moment/locale/ru'
@@ -17,7 +17,7 @@ import { Box, CircularProgress } from '@mui/material'
 
 const App = React.lazy(() => import('./App'))
 
-axios.defaults.baseURL = API_URL
+axios.defaults.baseURL = '/api'
 
 const LoadingSplash = () => (
   <Box

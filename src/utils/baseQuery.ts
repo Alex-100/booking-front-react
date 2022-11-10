@@ -5,10 +5,10 @@ import type {
 } from '@reduxjs/toolkit/query'
 import { fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import axios from 'axios'
-import { API_URL } from '../constants'
+// import { API_URL } from '../constants'
 
 const fetchQuery = fetchBaseQuery({
-  baseUrl: `${API_URL}/`,
+  baseUrl: `/api/`,
   prepareHeaders: (headers) => {
     const accessToken = JSON.parse(localStorage.getItem('auth') || '{}')
       .access_token
