@@ -1,8 +1,15 @@
-import { Box, TableHead, TableRow, useMediaQuery } from '@mui/material'
+import {
+  Box,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  useMediaQuery,
+} from '@mui/material'
 import eachDayOfInterval from 'date-fns/eachDayOfInterval'
 import parseISO from 'date-fns/parseISO'
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
-import { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useAppSelector } from 'store'
 import { useTranslation } from 'react-i18next'
 import { getDateLocale, groupByMonth, normalizeSchedulerData } from './tools'
@@ -132,6 +139,9 @@ export const SchedulerContainedNew = ({
           data={normalizedPlaces}
           totalCount={normalizedPlaces.length}
           components={{
+            Scroller: React.forwardRef((props, ref) => (
+              <TableContainer component={Box} {...props} ref={ref} />
+            )),
             TableHead: ({ style, ...props }) => (
               <TableHead
                 {...props}
@@ -139,6 +149,9 @@ export const SchedulerContainedNew = ({
               />
             ),
             // TableHead: TableHead,
+            TableBody: React.forwardRef((props, ref) => (
+              <TableBody {...props} ref={ref} />
+            )),
             TableRow: TableRow,
           }}
           atTopThreshold={20}
