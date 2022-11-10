@@ -85,6 +85,7 @@ export const SchedulerHeader = ({
               pb: 0.5,
               textAlign: 'center',
               zIndex: 100,
+              background: 'white',
               ...(isWeekend(date) && { bgcolor: '#fdeaea' }),
               ...(isSameDay(date, currentDate) && {
                 bgcolor: '#e3eefa',
