@@ -48,6 +48,7 @@ export const SchedulerHeader = ({
               background: 'white',
               zIndex: 100,
               borderBottom: 'none',
+              padding: '8px',
             }}
           >
             {item.month}

@@ -115,7 +115,7 @@ export const SchedulerContainedNew = ({
       <Box
         sx={{
           maxWidth: '100%',
-          maxHeight: `calc(100vh - 64px - 72px - 64px - ${filterHeight}px - ${
+          maxHeight: `calc(100vh - 64px - 72px - 48px - ${filterHeight}px - ${
             matchesSm ? 0 : 24
           }px - ${widthMax700 ? 64 : 0}px)`,
           overflowY: 'auto',
@@ -130,7 +130,7 @@ export const SchedulerContainedNew = ({
               opacity: 0.4,
               pointerEvents: 'none',
             }),
-            height: `calc(100vh - 64px - 72px - 64px - ${filterHeight}px - ${
+            height: `calc(100vh - 64px - 72px - 48px - ${filterHeight}px - ${
               matchesSm ? 0 : 24
             }px - ${widthMax700 ? 64 : 0}px)`,
           }}
