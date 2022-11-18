@@ -9,12 +9,13 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import FilterListIcon from '@mui/icons-material/FilterList'
 
-import ScheduleContainer from './containers/ScheduleContainer/ScheduleContainer'
+// import ScheduleContainer from './containers/ScheduleContainer/ScheduleContainer'
 import FiltersFormContainer from './containers/Filters/FiltersFormContainer'
 import FiltersViewContainer from './containers/Filters/FiltersViewContainer'
 import DateRangeContainer from './containers/Filters/DateRangeContainer'
 import PaginationContainer from './containers/Filters/PaginationContainer'
 import { useTranslation } from 'react-i18next'
+import ScheluderContainerNew from './containers/SchedulerContainerNew'
 
 const BookingPage = () => {
   const [filtersModalOpen, setFiltersModalOpen] = React.useState(false)
@@ -65,7 +66,8 @@ const BookingPage = () => {
         </div>
 
         <Box sx={{ width: '100%' }}>
-          <ScheduleContainer filterHeight={filterBlockHeight} />
+          {/* <ScheduleContainer filterHeight={filterBlockHeight} /> */}
+          <ScheluderContainerNew filterHeight={filterBlockHeight} />
         </Box>
         <PaginationContainer />
       </Paper>
