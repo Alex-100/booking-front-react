@@ -3,6 +3,7 @@ import { getURLSearchParams } from 'utils'
 import { DailyStatFilters } from '../types/DailyStatFilters'
 import { DailyStatForHospitalModel } from '../types/DailyStatForHospitalModel'
 import baseQuery from '../../../utils/baseQuery'
+import { PlaceStatInfo } from '../types/PlaceStatInfo'
 
 export const statisticServiceN = createApi({
   reducerPath: 'statisticServiceN',
@@ -20,7 +21,13 @@ export const statisticServiceN = createApi({
             })}`
           : `stat/daily/hospital/department?${getURLSearchParams(params)}`,
     }),
+    getStatForPlaces: builder.query<PlaceStatInfo[], null>({
+      query: () => 'stat/places',
+    }),
   }),
 })
 
-export const { useGetDailyStatForHospitalNQuery } = statisticServiceN
+export const {
+  useGetDailyStatForHospitalNQuery,
+  useGetStatForPlacesQuery,
+} = statisticServiceN
