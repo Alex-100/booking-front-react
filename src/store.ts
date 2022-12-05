@@ -19,6 +19,7 @@ import bookingFiltersSlice from './modules/Booking/state/bookingFiltersSlice'
 import dailyStatFiltersSlice from './modules/Dashboard/slices/dailyStatFiltersSlice'
 import { statisticService } from './modules/Dashboard/services/statisticService'
 import { externalSearchService } from './modules/Booking/state/externalSearchService'
+import { statisticServiceN } from 'modules/Statistic/services/statisticServiceN'
 
 export const store = configureStore({
   reducer: {
@@ -37,6 +38,7 @@ export const store = configureStore({
     [roomService.reducerPath]: roomService.reducer,
     [bookingService.reducerPath]: bookingService.reducer,
     [statisticService.reducerPath]: statisticService.reducer,
+    [statisticServiceN.reducerPath]: statisticServiceN.reducer,
     [externalSearchService.reducerPath]: externalSearchService.reducer,
   },
   middleware: (getDefaultMiddleware) =>
