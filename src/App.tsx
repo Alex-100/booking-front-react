@@ -30,7 +30,7 @@ const App: React.FC = () => {
         <MainLayout>
           <Route path="/" exact>
             {localStorage.getItem('auth') ? (
-              <Redirect to="/dashboard" />
+              <Redirect to="/statistic/common" />
             ) : (
               <Redirect to="/signin" />
             )}
