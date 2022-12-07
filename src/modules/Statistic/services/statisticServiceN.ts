@@ -17,11 +17,14 @@ export const statisticServiceN = createApi({
       DailyStatFilters
     >({
       query: (params) =>
-        params.departmentId === 0
+        params.hospitalId === ''
           ? `stat/daily/hospital/all?${getURLSearchParams({
               date: params.date,
             })}`
-          : `stat/daily/hospital/department?${getURLSearchParams(params)}`,
+          : `stat/daily/hospital/departments?${getURLSearchParams({
+              date: params.date,
+              departmentsId: params.departmentsId,
+            })}`,
     }),
     getStatForPlaces: builder.query<PlaceStatInfo[], null>({
       query: () => 'stat/places',
