@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import dayjs from 'dayjs'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
@@ -15,15 +15,13 @@ import {
   addDays,
   addMonths,
   addWeeks,
-  addYears,
   endOfMonth,
   endOfWeek,
-  endOfYear,
   startOfMonth,
   startOfWeek,
-  startOfYear,
 } from 'date-fns'
 import i18n from './../../../../i18n'
+import parseISO from 'date-fns/parseISO'
 
 const getDateRanges = (date: Date, locale: Locale): DefinedRange[] => [
   {
@@ -61,16 +59,16 @@ const getDateRanges = (date: Date, locale: Locale): DefinedRange[] => [
     startDate: startOfMonth(addMonths(date, -1)),
     endDate: endOfMonth(addMonths(date, -1)),
   },
-  {
-    label: i18n.t('This Year'),
-    startDate: startOfYear(date),
-    endDate: endOfYear(date),
-  },
-  {
-    label: i18n.t('Last Year'),
-    startDate: startOfYear(addYears(date, -1)),
-    endDate: endOfYear(addYears(date, -1)),
-  },
+  // {
+  //   label: i18n.t('This Year'),
+  //   startDate: startOfYear(date),
+  //   endDate: endOfYear(date),
+  // },
+  // {
+  //   label: i18n.t('Last Year'),
+  //   startDate: startOfYear(addYears(date, -1)),
+  //   endDate: endOfYear(addYears(date, -1)),
+  // },
 ]
 
 const DateRangeContainer: React.FC = () => {
@@ -100,6 +98,19 @@ const DateRangeContainer: React.FC = () => {
 
   const dateRanges = useMemo(() => getDateRanges(new Date(), locale), [locale])
 
+  useEffect(() => {
+    console.log(
+      bookingFilters.from,
+      bookingFilters.to,
+      parseISO(bookingFilters.from),
+      parseISO(bookingFilters.to)
+    )
+    console.log(
+      addMonths(parseISO(bookingFilters.to), 2),
+      addMonths(parseISO(bookingFilters.from), -2)
+    )
+  }, [bookingFilters.from, bookingFilters.to])
+
   return (
     <Box sx={{ position: 'relative', minWidth: 200 }}>
       <Stack spacing={2} direction="row">
@@ -128,6 +139,8 @@ const DateRangeContainer: React.FC = () => {
               toggle={handleToggle}
               onChange={handleChangeDateRange}
               locale={locale}
+              minDate={addMonths(parseISO(bookingFilters.to), -2)}
+              maxDate={addMonths(parseISO(bookingFilters.from), 2)}
             />
           </Box>
         </Box>
