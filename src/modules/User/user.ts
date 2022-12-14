@@ -26,7 +26,7 @@ export const userApi = createApi({
         }/${user.roles
           .map((r) => JSON.parse(`${r}`))
           .map((r: any) => r.id)
-          .join('/')}`,
+          .join(',')}`,
         method: 'post',
         body: {
           ...user,
@@ -47,20 +47,42 @@ export const userApi = createApi({
       invalidatesTags: ['User'],
     }),
     updateUser: builder.mutation<null, UserModel>({
-      query: (user) => ({
-        url: `users/update/${user.id}/${
-          JSON.parse(String(user.department)).id
-        }/${user.roles
-          .map((r) => JSON.parse(`${r}`))
-          .map((r: any) => r.id)
-          .join('/')}`,
-        method: 'put',
-        body: {
-          ...user,
-          department: JSON.parse(String(user.department)),
-          roles: user.roles.map((r) => JSON.parse(`${r}`)),
-        },
-      }),
+      query: (user) => {
+        // console.log('=====')
+        const dep =
+          typeof user.department === 'object'
+            ? user.department
+            : JSON.parse(user.department)
+        // console.log('BEGIN PARCE ROLES', user.roles)
+        const roles = user.roles.map((role: any) =>
+          typeof role === 'object' ? JSON.stringify(role) : role
+        )
+        // console.log('ROLES', roles)
+
+        // ${user.roles
+        //   .map((r) => JSON.parse(`${r}`))
+        //   .map((r: any) => r.id)
+        //   .join('/')}`
+
+        // url: `users/update/${user.id}/${
+        //   JSON.parse(String(user.department)).id
+        // }/${user.roles
+        //   .map((r) => JSON.parse(`${r}`))
+
+        ///user.roles.map((r) => JSON.parse(`${r}`))
+        return {
+          url: `users/update/${user.id}/${dep.id}/${roles
+            .map((r) => JSON.parse(`${r}`))
+            .map((r: any) => r.id)
+            .join(',')}`,
+          method: 'put',
+          body: {
+            ...user,
+            department: dep,
+            roles: roles.map((r) => JSON.parse(`${r}`)),
+          },
+        }
+      },
       invalidatesTags: ['User'],
     }),
   }),
