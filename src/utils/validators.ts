@@ -22,6 +22,11 @@ const minValue = (min: number) => (value: number) =>
 const maxValue = (max: number) => (value: number) =>
   value && value > max ? i18n.t(`Must be not more {{max}}`, { max }) : undefined
 
+const isLettersAndNumber = (value: string) =>
+  value && !/^\w+$/.test(value)
+    ? i18n.t('Must contain only letters and numbers')
+    : undefined
+
 const isTime = (value: string) =>
   value && !/^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(value)
     ? i18n.t('Invalid time')
@@ -67,4 +72,5 @@ export const validators = {
   passwordConfirm,
   isTime,
   isDate,
+  isLettersAndNumber,
 }
