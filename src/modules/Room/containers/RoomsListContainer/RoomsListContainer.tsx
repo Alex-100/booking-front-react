@@ -39,6 +39,12 @@ import Divider from '@mui/material/Divider'
 import { useTranslation } from 'react-i18next'
 import { CircularProgress } from '@mui/material'
 import { useGetUserByUsernameQuery } from 'services'
+import { useAppDispatch, useAppSelector } from 'store'
+import {
+  setRoomPage,
+  setRoomPageFilters,
+  setRoomPageSize,
+} from 'modules/Room/model/roomPageModel'
 
 const RoomsListContainer: React.FC = () => {
   const { t } = useTranslation()
@@ -49,32 +55,36 @@ const RoomsListContainer: React.FC = () => {
   const auth = useAuth()
   const modals = useEntityModal<RoomModel>()
 
-  // region filters
   const labelsQuery = useGetAllLabelsQuery(null)
   const departmentsQuery = useGetAllDepartmentsQuery({ page: 0 })
   const hospitalsQuery = useGetAllHospitalsQuery(null)
-  const [filters, setFilters] = React.useState({
-    hospitalId: undefined,
-    labelId: undefined,
-    departmentId: undefined,
-  })
+
+  const dispatch = useAppDispatch()
+
+  const { page, pageSize, filters } = useAppSelector(
+    (store) => store.roomPageData
+  )
+
+  // const [filters, setFilters] = React.useState({
+  //   hospitalId: undefined,
+  //   labelId: undefined,
+  //   departmentId: undefined,
+  // })
 
   const handleSetFilter = (filter: 'hospital' | 'label' | 'department') => (
     event: SelectChangeEvent
   ) => {
-    setFilters({ ...filters, [`${filter}Id`]: event.target.value })
+    dispatch(
+      setRoomPageFilters({ ...filters, [`${filter}Id`]: event.target.value })
+    )
   }
-  // endregion filters
 
-  // region pagination
-  const [page, setPage] = React.useState(0)
-  const [pageSize, setPageSize] = React.useState(10)
   const handleChangePage = (p: number) => {
-    setPage(p)
+    dispatch(setRoomPage(p))
   }
 
   const handleChangePageSize = (p: number) => {
-    setPageSize(p)
+    dispatch(setRoomPageSize(p))
   }
   // endregion pagination
 
@@ -129,7 +139,6 @@ const RoomsListContainer: React.FC = () => {
         : false,
     [user]
   )
-
 
   if (!data)
     return (
