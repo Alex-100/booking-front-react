@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 import React, { useEffect, useMemo, useState } from 'react'
 import Stack from '@mui/material/Stack'
 import { Field, formValueSelector } from 'redux-form'
@@ -13,10 +15,12 @@ import { connect } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { useGetApplicationQuery } from 'modules/Application/applicationService'
 
-import { styled, TextField } from '@mui/material'
+import { styled, TextField, TextFieldProps, Theme } from '@mui/material'
 import parseISO from 'date-fns/parseISO'
 import addDays from 'date-fns/addDays'
 import formatISO from 'date-fns/formatISO'
+import InputMask from 'react-input-mask'
+import { MUIStyledCommonProps } from '@mui/system'
 
 const StyledTextField = styled(TextField)(() => ({
   '& .MuiFormLabel-asterisk': {
@@ -417,41 +421,62 @@ const DateRangeFields = ({
       </Stack>
 
       <Stack direction={!matchSm ? 'column' : 'row'} spacing={1}>
-        <StyledTextField
-          fullWidth
+        <InputMask
+          mask={'9999-99-99'}
           required
           label={t('Entering date')}
           placeholder={t('Entering date')}
           value={enteringDateVal}
           onChange={handleEnteringDateChange}
-          error={isErrorEnteringDateValid}
-          helperText={enteringDateValidator}
-        />
+        >
+          {(props) => (
+            <StyledTextField
+              {...props}
+              fullWidth
+              error={isErrorEnteringDateValid}
+              helperText={enteringDateValidator}
+            />
+          )}
+        </InputMask>
 
-        <StyledTextField
-          fullWidth
+        <InputMask
+          mask={'99:99'}
           required
           label={t('Entering time')}
           placeholder={t('Entering time')}
           value={enteringTimeVal}
           onChange={handleEnteringTimeValChange}
-          error={isErrorEnteringTimeValid}
-          helperText={enteringTimeValidator}
-        />
+        >
+          {(props) => (
+            <StyledTextField
+              {...props}
+              fullWidth
+              error={isErrorEnteringTimeValid}
+              helperText={enteringTimeValidator}
+            />
+          )}
+        </InputMask>
       </Stack>
 
       <Stack direction={!matchSm ? 'column' : 'row'} spacing={1}>
         <Stack>
-          <StyledTextField
-            fullWidth
+          <InputMask
+            mask={'9999-99-99'}
             required
             label={t('Leaving date')}
             placeholder={t('Leaving date')}
             value={leavingDateVal}
             onChange={handleLeavingDateChange}
-            error={isErrorLeavingDateValid}
-            helperText={leavingDateValidator}
-          />
+          >
+            {(props) => (
+              <StyledTextField
+                {...props}
+                fullWidth
+                error={isErrorLeavingDateValid}
+                helperText={leavingDateValidator}
+              />
+            )}
+          </InputMask>
 
           <Stack direction="row" spacing={1} sx={{ mt: 1 }}>
             {DAYS_INCREMENT_OPTIONS.map((d) => (
@@ -463,11 +488,6 @@ const DateRangeFields = ({
                   const date = parseISO(enteringDateVal)
                   const dateP = addDays(date, d)
                   setLeavingDateVal(formatISO(dateP).slice(0, 10))
-                  // input.onChange(
-                  //   moment(enteringDate)
-                  //     .add(d, 'days')
-                  //     .format(DATE_FORMAT_TEMPLATE)
-                  // )
                 }}
                 color="primary"
                 variant="outlined"
@@ -476,16 +496,28 @@ const DateRangeFields = ({
           </Stack>
         </Stack>
 
-        <StyledTextField
-          fullWidth
+        <InputMask
           required
-          label={t('Leaving time')}
           placeholder={t('Leaving time')}
           value={leavingTimeVal}
           onChange={handleTimeValChange}
-          error={isErrorLeavingTimeValid}
-          helperText={leavingTimeValidator}
-        />
+          label={t('Leaving time')}
+          mask={'99:99'}
+        >
+          {(
+            props: JSX.IntrinsicAttributes &
+              React.PropsWithChildren<
+                (TextFieldProps & MUIStyledCommonProps<Theme>) & {}
+              >
+          ) => (
+            <StyledTextField
+              {...props}
+              fullWidth
+              error={isErrorLeavingTimeValid}
+              helperText={leavingTimeValidator}
+            />
+          )}
+        </InputMask>
       </Stack>
     </Stack>
   )
