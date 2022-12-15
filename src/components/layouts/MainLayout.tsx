@@ -11,9 +11,11 @@ import IconButton from '@mui/material/IconButton'
 import {
   AppBar as MuiAppBar,
   AppBarProps as MuiAppBarProps,
+  Collapse,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Popover,
 } from '@mui/material'
 import PeopleIcon from '@mui/icons-material/PeopleOutlined'
 import MenuIcon from '@mui/icons-material/MenuOutlined'
@@ -41,6 +43,9 @@ import { useGetUserByUsernameQuery } from '../../modules/User/user'
 import { getUserShortName } from '../../utils'
 import { Skeleton } from '@mui/lab'
 import { useTranslation } from 'react-i18next'
+
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 const drawerWidth: number = 240
 
@@ -95,6 +100,48 @@ const CustomDrawer = styled(MuiDrawer, {
 
 const mdTheme = createTheme()
 
+const StatisticSubMemu = () => {
+  const { t } = useTranslation()
+  return (
+    <>
+      <List>
+        <Link to="/statistic/common">
+          <ListItemButton selected={location.pathname === '/statistic/common'}>
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.common')} />
+          </ListItemButton>
+        </Link>
+        <Link to="/statistic/department">
+          <ListItemButton
+            selected={location.pathname === '/statistic/department'}
+          >
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.department')} />
+          </ListItemButton>
+        </Link>
+        <Link to="/statistic/paid">
+          <ListItemButton selected={location.pathname === '/statistic/paid'}>
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.pay')} />
+          </ListItemButton>
+        </Link>
+        <Link to="/statistic/rooms">
+          <ListItemButton selected={location.pathname === '/statistic/rooms'}>
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.rooms')} />
+          </ListItemButton>
+        </Link>
+        <Link to="/statistic/users">
+          <ListItemButton selected={location.pathname === '/statistic/users'}>
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.users')} />
+          </ListItemButton>
+        </Link>
+      </List>
+    </>
+  )
+}
+
 const Dashboard: React.FC = ({ children }) => {
   // const widthMax950 = useMediaQuery('(max-width:950px)')
   const widthMax700 = useMediaQuery('(max-width:700px)')
@@ -125,6 +172,27 @@ const Dashboard: React.FC = ({ children }) => {
   React.useEffect(() => {
     console.log('CURRENT USER', user)
   }, [user])
+
+  const [
+    anchorElStatistic,
+    setAnchorElStatistic,
+  ] = React.useState<HTMLDivElement | null>(null)
+  const [openedStatisticMenu, setOpenedStatisticMenu] = React.useState(false)
+
+  const openStatisticMenu = Boolean(anchorElStatistic)
+
+  const handleStateStatisticMenu = (
+    event: React.MouseEvent<HTMLDivElement>
+  ) => {
+    if (!open) {
+      setAnchorElStatistic(event.currentTarget)
+    }
+    setOpenedStatisticMenu((state) => !state)
+  }
+
+  const handleCloseStatisticPopover = () => {
+    setAnchorElStatistic(null)
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -233,14 +301,49 @@ const Dashboard: React.FC = ({ children }) => {
             onClick={() => widthMax700 && setOpen(false)}
             sx={{ width: '240px' }}
           >
-            <Link to="/dashboard">
-              <ListItemButton selected={location.pathname === '/dashboard'}>
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('Dashboard')} />
-              </ListItemButton>
-            </Link>
+            <ListItemButton
+              selected={
+                location.pathname === '/dashboard' ||
+                location.pathname === '/statistic/common' ||
+                location.pathname === '/statistic/department' ||
+                location.pathname === '/statistic/paid' ||
+                location.pathname === '/statistic/rooms' ||
+                location.pathname === '/statistic/users'
+              }
+              onClick={handleStateStatisticMenu}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary={t('Statistic')} />
+              {openedStatisticMenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            </ListItemButton>
+            <Popover
+              id={''}
+              open={openStatisticMenu}
+              anchorEl={anchorElStatistic}
+              onClose={handleCloseStatisticPopover}
+              sx={{ ml: '4rem', pr: '2rem' }}
+              onClick={handleCloseStatisticPopover}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+            >
+              <StatisticSubMemu />
+            </Popover>
+            <Collapse
+              timeout={'auto'}
+              in={openedStatisticMenu && open}
+              unmountOnExit
+            >
+              <StatisticSubMemu />
+            </Collapse>
+
             <Divider sx={{ my: 1 }} />
 
             {isAdmin && (

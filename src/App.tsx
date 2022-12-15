@@ -15,6 +15,11 @@ import ApplicationSettingsPage from './modules/Application/ApplicationSettingsPa
 import RoomsListPage from './modules/Room/pages/RoomsListPage'
 import RoomDetailPage from './modules/Room/pages/RoomDetailPage'
 import BookingPage from './modules/Booking/BookingPage'
+import { StatisticDepartmentPage } from 'modules/Statistic/pages/StatisticDepartmentPage'
+import { StatisticPaidPage } from 'modules/Statistic/pages/StatisticPaidPage'
+import { StatisticRoomsPage } from 'modules/Statistic/pages/StatisticRoomsPage'
+import { StatisticUsersPage } from 'modules/Statistic/pages/StatisticUsersPage'
+import { StatisticCommonPage } from 'modules/Statistic/pages/StatisticCommonPage'
 
 const App: React.FC = () => {
   return (
@@ -25,12 +30,33 @@ const App: React.FC = () => {
         <MainLayout>
           <Route path="/" exact>
             {localStorage.getItem('auth') ? (
-              <Redirect to="/dashboard" />
+              <Redirect to="/statistic/common" />
             ) : (
               <Redirect to="/signin" />
             )}
           </Route>
           <Route path="/dashboard" component={DashboardPage} exact />
+          <Route
+            path={'/statistic/common'}
+            component={StatisticCommonPage}
+            exact
+          />
+          <Route
+            path="/statistic/department"
+            component={StatisticDepartmentPage}
+            exact
+          />
+          <Route path={'/statistic/paid'} component={StatisticPaidPage} exact />
+          <Route
+            path={'/statistic/rooms'}
+            component={StatisticRoomsPage}
+            exact
+          />
+          <Route
+            path={'/statistic/users'}
+            component={StatisticUsersPage}
+            exact
+          />
           <Route path="/roles" component={RolesPage} exact />
           <Route path="/users" component={UsersPage} exact />
           <Route path="/labels" component={LabelsPage} exact />

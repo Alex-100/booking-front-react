@@ -1,11 +1,7 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
 import Stack from '@mui/material/Stack'
-import {
-  renderMultiSelectField,
-  renderSelectField,
-  renderTextField,
-} from '../../components/redux-form'
+import { renderSelectField, renderTextField } from '../../components/redux-form'
 import { validators } from '../../utils'
 import MenuItem from '@mui/material/MenuItem'
 import LoadingButton from '@mui/lab/LoadingButton'
@@ -18,6 +14,7 @@ import { dateMask } from '../../utils/masks'
 import { useTranslation } from 'react-i18next'
 import { UserExternalSearch } from './UserExternalSearch'
 import { EmployeeItem } from 'modules/Booking/state/externalSearchService'
+import { renderMultiSelectNewField } from 'components/redux-form/MultiSelectNew'
 
 const UserForm = reduxForm<UserModel, FormProps>({
   form: 'user',
@@ -92,7 +89,7 @@ const UserForm = reduxForm<UserModel, FormProps>({
             label={t('Username')}
             component={renderTextField}
             required
-            validate={[validators.required]}
+            validate={[validators.required, validators.isLettersAndNumber]}
           />
           <Field
             name="password"
@@ -108,7 +105,7 @@ const UserForm = reduxForm<UserModel, FormProps>({
             name="roles"
             label={t('Roles')}
             placeholder={t('Add role')}
-            component={renderMultiSelectField}
+            component={renderMultiSelectNewField}
             required
             validate={[validators.required]}
           >

@@ -19,12 +19,15 @@ import bookingFiltersSlice from './modules/Booking/state/bookingFiltersSlice'
 import dailyStatFiltersSlice from './modules/Dashboard/slices/dailyStatFiltersSlice'
 import { statisticService } from './modules/Dashboard/services/statisticService'
 import { externalSearchService } from './modules/Booking/state/externalSearchService'
+import { statisticServiceN } from 'modules/Statistic/services/statisticServiceN'
+import roomPageData from './modules/Room/model/roomPageModel'
 
 export const store = configureStore({
   reducer: {
     form: formReducer,
     bookingFilters: bookingFiltersSlice,
     dailyStatFilters: dailyStatFiltersSlice,
+    roomPageData: roomPageData,
     [roleApi.reducerPath]: roleApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [companyApi.reducerPath]: companyApi.reducer,
@@ -37,6 +40,7 @@ export const store = configureStore({
     [roomService.reducerPath]: roomService.reducer,
     [bookingService.reducerPath]: bookingService.reducer,
     [statisticService.reducerPath]: statisticService.reducer,
+    [statisticServiceN.reducerPath]: statisticServiceN.reducer,
     [externalSearchService.reducerPath]: externalSearchService.reducer,
   },
   middleware: (getDefaultMiddleware) =>

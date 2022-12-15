@@ -1,10 +1,15 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
+import { getURLSearchParams } from 'utils'
 import type {
   ObjectsList,
   PaginationParams,
   DepartmentModel,
 } from '../../types'
 import baseQuery from '../../utils/baseQuery'
+
+interface DepartmentsByHospitalProps {
+  hospitalId: number | undefined
+}
 
 export const departmentApi = createApi({
   reducerPath: 'departmentApi',
@@ -17,6 +22,12 @@ export const departmentApi = createApi({
     >({
       query: ({ page }) => `department/get?pageNumber=${page}`,
       providesTags: ['Department'],
+    }),
+    getDepartmentsByHospital: builder.query<
+      DepartmentModel[],
+      DepartmentsByHospitalProps
+    >({
+      query: (params) => `department?${getURLSearchParams(params)}`,
     }),
     createDepartment: builder.mutation<null, DepartmentModel>({
       query: (department) => ({
@@ -59,4 +70,5 @@ export const {
   useCreateDepartmentMutation,
   useUpdateDepartmentMutation,
   useRemoveDepartmentMutation,
+  useGetDepartmentsByHospitalQuery,
 } = departmentApi

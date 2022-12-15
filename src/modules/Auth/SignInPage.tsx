@@ -30,7 +30,7 @@ export default function SignInPage() {
       .post(`/login`, values)
       .then((response) => {
         localStorage.setItem('auth', JSON.stringify(response.data))
-        history.push('/dashboard')
+        history.push('/statistic/common')
         setLoading(false)
       })
       .catch(() => {

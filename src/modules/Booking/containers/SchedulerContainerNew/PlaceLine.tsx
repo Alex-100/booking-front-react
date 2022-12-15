@@ -33,14 +33,22 @@ export const PlaceLine = ({ place, booking, canEdit }: PlaceLineProps) => {
     [booking.enteringDate, booking.leavingDate]
   )
 
-  const l = useMemo(
-    () =>
-      eachMinuteOfInterval({
-        start: parseISO(bookingFilters.from.slice(0, 10)),
-        end: parseISO(booking.enteringDate),
-      }).length / 30,
-    [bookingFilters.from, booking.enteringDate]
-  )
+  // const l = useMemo(() => {
+  //   const d1 = parseISO(bookingFilters.from.slice(0, 10))
+  //   const d2 = parseISO(booking.enteringDate)
+  //   const interval = d1 < d2 ? eachMinuteOfInterval({start: d1, end: d2}) : eachMinuteOfInterval({start: d2, end: d1})
+  //   return interval.length / 30
+  //   )
+  // }, [bookingFilters.from, booking.enteringDate])
+  const l = useMemo(() => {
+    const d1 = parseISO(bookingFilters.from.slice(0, 10))
+    const d2 = parseISO(booking.enteringDate)
+    const interval =
+      d1 < d2
+        ? eachMinuteOfInterval({ start: d1, end: d2 })
+        : eachMinuteOfInterval({ start: d2, end: d1 })
+    return d1 < d2 ? interval.length / 30 : -interval.length / 30
+  }, [bookingFilters.from, booking.enteringDate])
 
   const overflow = useMemo(() => {
     const d1 = parseISO(booking.leavingDate)
