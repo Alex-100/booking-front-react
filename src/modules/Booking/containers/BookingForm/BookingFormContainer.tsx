@@ -106,10 +106,14 @@ const BookingFormContainer: React.FC<Props> = (props) => {
     }
 
     if (initialValues) {
+      const placeId: number =
+        Array.isArray(nValues.placeId) && nValues.placeId.length > 0
+          ? nValues.placeId[0]
+          : place.id
       submitUpdate({
         ...initialValues,
         ...nValues,
-        placeId: place.id,
+        placeId,
         typeOfBooking: undefined,
       })
     } else {
