@@ -203,48 +203,51 @@ export const PlaceLinePoppover = ({
               )}
             </Typography>
           </Stack>
-          <Paper variant="outlined" sx={{ p: 1 }}>
-            <Stack direction="row" spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('Full name')}:{' '}
-              </Typography>
-              <Typography>
-                {booking.appUser.surname} {booking.appUser.name}{' '}
-                {booking.appUser.patrName}
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('Birth date')}:{' '}
-              </Typography>
-              <Typography>
-                {booking.appUser.dob ? (
-                  <>
-                    {format(
-                      parseISO(booking.appUser.dob),
-                      i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+          {booking.individualId && (
+            <>
+              <Paper variant="outlined" sx={{ p: 1 }}>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    {t('Full name')}:{' '}
+                  </Typography>
+                  <Typography>
+                    {booking.surname} {booking.name} {booking.patronymicName}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    {t('Birth date')}:{' '}
+                  </Typography>
+                  <Typography>
+                    {booking.appUser.dob ? (
+                      <>
+                        {format(
+                          parseISO(booking.dob),
+                          i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+                        )}
+                      </>
+                    ) : (
+                      ''
                     )}
-                  </>
-                ) : (
-                  ''
-                )}
-              </Typography>
-            </Stack>
-            <Stack direction="row" spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                IID:{' '}
-              </Typography>
-              <Typography>{booking.appUser.individualId}</Typography>
-            </Stack>
-            <Stack direction="row" spacing={1}>
+                  </Typography>
+                </Stack>
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    IID:{' '}
+                  </Typography>
+                  <Typography>{booking.individualId}</Typography>
+                </Stack>
+                {/* <Stack direction="row" spacing={1}>
               <Typography variant="subtitle2" color="text.secondary">
                 {t('Gender')}:{' '}
               </Typography>
               <Typography>
-                {booking.appUser.gender === 'MALE' ? t('Male') : t('Female')}
+                {booking.gender === 'MALE' ? t('Male') : t('Female')}
               </Typography>
-            </Stack>
-          </Paper>
+            </Stack> */}
+              </Paper>
+            </>
+          )}
         </Stack>
       </Popover>
       <EntityRemoveModal
