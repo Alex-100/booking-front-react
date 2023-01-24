@@ -183,12 +183,32 @@ const BookingFormContainer: React.FC<Props> = (props) => {
       })
     }
 
-    if (
-      (responseCreate && responseCreate.status === 'rejected') ||
-      (responseCreateGroup && responseCreateGroup.status === 'rejected') ||
-      (responseUpdate && responseUpdate.status === 'rejected')
-    ) {
-      enqueueSnackbar(t('Error booking'), {
+    // if (
+    //   (responseCreate && responseCreate.status === 'rejected') ||
+    //   (responseCreateGroup && responseCreateGroup.status === 'rejected') ||
+    //   (responseUpdate && responseUpdate.status === 'rejected')
+    // ) {
+    //   enqueueSnackbar(responseUpdate.error, {
+    //     variant: 'error',
+    //     anchorOrigin: { vertical: 'top', horizontal: 'right' },
+    //   })
+    // }
+    if (responseCreate && responseCreate.status === 'rejected') {
+      enqueueSnackbar(errorCreateMessage, {
+        variant: 'error',
+        anchorOrigin: { vertical: 'top', horizontal: 'right' },
+      })
+    }
+
+    if (responseCreateGroup && responseCreateGroup.status === 'rejected') {
+      enqueueSnackbar(errorCreateGroupMessage, {
+        variant: 'error',
+        anchorOrigin: { vertical: 'top', horizontal: 'right' },
+      })
+    }
+
+    if (responseUpdate && responseUpdate.status === 'rejected') {
+      enqueueSnackbar(errorUpdateMessage, {
         variant: 'error',
         anchorOrigin: { vertical: 'top', horizontal: 'right' },
       })
