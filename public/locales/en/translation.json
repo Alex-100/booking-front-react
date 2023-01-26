@@ -12,7 +12,8 @@
     "department": "Departments",
     "pay": "Paid",
     "rooms": "Rooms",
-    "users": "Users"
+    "users": "Users",
+    "users_brief": "Users (date)"
   },
   "Statistic": "Statistic",
   "Roles": "Roles",
@@ -92,7 +93,6 @@
   "AWAITING_LEAVING": "AWAITING_LEAVING",
   "AWAITING_BOOKING": "AWAITING_BOOKING",
   "Success booking": "Success booking",
-  "Error booking": "Error booking",
   "Edit booking": "Edit booking",
   "Create a booking": "Create a booking",
   "Individual": "Individual",
