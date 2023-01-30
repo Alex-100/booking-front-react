@@ -9,14 +9,20 @@ import {
 import eachDayOfInterval from 'date-fns/eachDayOfInterval'
 import parseISO from 'date-fns/parseISO'
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useAppSelector } from 'store'
 import { useTranslation } from 'react-i18next'
 import { getDateLocale, groupByMonth, normalizeSchedulerData } from './tools'
 import { GroupedDaysList } from './interfaces'
 import { SchedulerHeader } from './SchedulerHeader'
 import { DepartmentRow } from './DepartmentRow'
-import { TableVirtuoso } from 'react-virtuoso'
+import { ListRange, TableVirtuoso, TableVirtuosoHandle } from 'react-virtuoso'
 import { SchedulerRoomsRow } from './SchedulerRoomsRow'
 import { SchedulerPlaceRow } from './SchedulerPlaceRow'
 import BookingFormContainer from '../BookingForm/BookingFormContainer'
@@ -110,6 +116,85 @@ export const SchedulerContainedNew = ({
     auth,
   ])
 
+  const refCnt = useRef<TableVirtuosoHandle>(null)
+  // const refScroller = useRef(null)
+
+  // useEffect(() => {
+  //   if (refCnt && refCnt.current) {
+  //     console.log('REf', refCnt.current)
+  //   }
+  // }, [refCnt.current])
+
+  // const scrollerRef = useRef()
+  // const handleScrollerRef = useCallback((ref) => {
+  //   scrollerRef.current = ref
+  // }, [])
+
+  // useEffect(() => {
+  //   if (scrollerRef && scrollerRef.current) {
+  //     console.log('REF SCROLLER', scrollerRef.current)
+  //   }
+  // }, [scrollerRef.current])
+
+  // const {cl\\} = scrollerRef.current
+  // const [range, setRange] = useState<ListRange | undefined>()
+
+  // const handleRangeChange = (arange: ListRange) => {
+  //   // setRange(arange)
+  // }
+
+  const range = useRef<number>(0)
+  const handleRangeChange = useCallback((r: ListRange) => {
+    console.log('RANGE', r)
+    range.current = r.startIndex
+  }, [])
+
+  // useEffect(() => {
+  //   console.log('DATA UPDATES', range)
+  //   if (range) {
+  //     // refCnt.current?.scrollToIndex(range.startIndex)
+  //   }
+  // }, [data])
+
+  // const [scrolled, setScrolled] = useState<{
+  //   scrollLeft: number
+  //   scrollTop: number
+  // }>({ scrollLeft: 0, scrollTop: 0 })
+
+  const scrolled = useRef<{
+    scrollLeft: number
+    scrollTop: number
+  }>({ scrollLeft: 0, scrollTop: 0 })
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement, UIEvent>) => {
+    if (e.currentTarget) {
+      const { scrollLeft, scrollTop } = e.currentTarget
+      scrolled.current = { scrollLeft, scrollTop }
+      console.log(scrollLeft, scrollTop)
+    }
+  }
+
+  useLayoutEffect(() => {
+    console.log('Loaded normalized place', scrolled.current, range)
+    const { scrollLeft, scrollTop } = scrolled.current
+    setTimeout(() => {
+      console.log('SCROLLED IN', scrollLeft, scrollTop, range)
+      refCnt.current?.scrollTo({
+        // left: scrollLeft,
+        top: scrollTop,
+      })
+    }, 10)
+
+    // setTimeout(() => {
+    //   console.log('SCROLLED IN 2', scrollLeft, scrollTop, range)
+    //   refCnt.current?.scrollTo({
+    //     behavior: 'smooth',
+    //     left: scrollLeft,
+    //     top: scrollTop,
+    //   })
+    // }, 400)
+  }, [normalizedPlaces])
+
   return (
     <>
       <Box
@@ -122,6 +207,11 @@ export const SchedulerContainedNew = ({
         }}
       >
         <TableVirtuoso
+          ref={refCnt}
+          rangeChanged={handleRangeChange}
+          // initialTopMostItemIndex={range.current}
+          // rangeChanged={setRange}
+          // scrollerRef={handleScrollerRef}
           style={{
             width: '100%',
             borderTop: 1,
@@ -146,7 +236,12 @@ export const SchedulerContainedNew = ({
           totalCount={normalizedPlaces.length}
           components={{
             Scroller: React.forwardRef((props, ref) => (
-              <TableContainer component={Box} {...props} ref={ref} />
+              <TableContainer
+                component={Box}
+                {...props}
+                ref={ref}
+                onScroll={handleScroll}
+              />
             )),
             TableHead: ({ style, ...props }) => (
               <TableHead
