@@ -229,7 +229,7 @@ const Dashboard: React.FC = ({ children }) => {
           open={open}
           variant={widthMax700 ? undefined : 'permanent'}
           onClose={toggleDrawer}
-          sx={{ overflowX: 'hidden' }}
+          sx={{ overflowX: 'hidden', overflowY: 'auto', maxHeight: '100vh' }}
         >
           <Toolbar>
             <IconButton
