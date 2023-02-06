@@ -139,7 +139,7 @@ export const DateRangeSelector = ({
 
   useEffect(() => {
     const d = `${leavingDateVal} ${leavingTimeVal}`
-    console.log('L DATE', d, isMatch(d, 'yyyy-MM-dd HH-mm'))
+    console.log('L DATE', d, isMatch(d, 'yyyy-MM-dd HH:mm'))
     if (isMatch(d, 'yyyy-MM-dd HH:mm')) {
       onLeaveDateChange(d)
     } else {
