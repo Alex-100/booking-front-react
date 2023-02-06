@@ -237,14 +237,16 @@ export const PlaceLinePoppover = ({
                   </Typography>
                   <Typography>{booking.individualId}</Typography>
                 </Stack>
-                {/* <Stack direction="row" spacing={1}>
-              <Typography variant="subtitle2" color="text.secondary">
-                {t('Gender')}:{' '}
-              </Typography>
-              <Typography>
-                {booking.gender === 'MALE' ? t('Male') : t('Female')}
-              </Typography>
-            </Stack> */}
+                {booking.gender !== null && (
+                  <Stack direction="row" spacing={1}>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      {t('Gender')}:{' '}
+                    </Typography>
+                    <Typography>
+                      {booking.gender === 'MALE' ? t('Male') : t('Female')}
+                    </Typography>
+                  </Stack>
+                )}
               </Paper>
             </>
           )}

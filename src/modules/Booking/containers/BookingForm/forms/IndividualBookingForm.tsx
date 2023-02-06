@@ -226,6 +226,23 @@ export const IndividualBookingForm = reduxForm<BookingCreateForm, Props>({
                   {...dateMask}
                 />
                 <Field
+                  name="gender"
+                  label={t('Gender')}
+                  component={renderSelectField}
+                >
+                  <MenuItem value="">
+                    <em>{t('None')}</em>
+                  </MenuItem>
+                  <MenuItem value="MALE">{t('Male')}</MenuItem>
+                  <MenuItem value="FEMALE">{t('Female')}</MenuItem>
+                </Field>
+              </Stack>
+              <Stack
+                spacing={3}
+                direction={matchSm ? 'row' : 'column'}
+                width="100%"
+              >
+                <Field
                   name="individualId"
                   label={t('Individual ID')}
                   component={renderTextField}

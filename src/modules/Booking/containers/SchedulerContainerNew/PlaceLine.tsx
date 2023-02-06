@@ -141,20 +141,20 @@ export const PlaceLine = ({ place, booking, canEdit }: PlaceLineProps) => {
             marginTop: '11px',
             bgcolor: color,
             ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
-              booking.appUser.gender === 'MALE' && {
+              booking.gender === 'MALE' && {
                 bgcolor: blue[400],
               }),
             ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
-              booking.appUser.gender === 'FEMALE' && {
+              booking.gender === 'FEMALE' && {
                 bgcolor: pink[200],
               }),
             borderColor: borderColor,
             ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
-              booking.appUser.gender === 'MALE' && {
+              booking.gender === 'MALE' && {
                 borderColor: blue[400],
               }),
             ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
-              booking.appUser.gender === 'FEMALE' && {
+              booking.gender === 'FEMALE' && {
                 borderColor: pink[200],
               }),
           }}
