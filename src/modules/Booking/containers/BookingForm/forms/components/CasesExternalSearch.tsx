@@ -56,8 +56,15 @@ export const CasesExternalSearch = ({ onSelect }: CasesExternalSearchProps) => {
         inputValue={value}
         onInputChange={(_, v) => setValue(v)}
         onChange={(_, v) => v && onSelect(v)}
+        filterOptions={(v) => v}
         getOptionLabel={(option) =>
-          option.surname + ' ' + option.name + ' ' + option.partName
+          option.surname +
+          ' ' +
+          option.name +
+          ' ' +
+          option.partName +
+          ' ' +
+          option.individualId
         }
         renderOption={(props, option) => (
           <li {...props}>
