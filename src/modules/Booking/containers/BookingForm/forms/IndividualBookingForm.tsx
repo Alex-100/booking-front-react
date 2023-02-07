@@ -24,7 +24,7 @@ import { dateMask, phoneMask } from 'utils/masks'
 import { LoadingButton } from '@mui/lab'
 import { FormProps } from '../../../../../components/redux-form/types'
 import { CasesExternalSearch } from './components/CasesExternalSearch'
-import { CaseSearchItem } from 'modules/Booking/state/externalSearchService'
+import { CaseSearchNewItem } from 'modules/Booking/state/externalSearchService'
 import { PlaceModel } from 'modules/Room/types'
 import { useEffect, useState } from 'react'
 import { useGetRoomByPlaceIdMutation } from 'modules/Room/services/roomService'
@@ -94,12 +94,14 @@ export const IndividualBookingForm = reduxForm<BookingCreateForm, Props>({
   //     })
   //   }
 
-  const handleExternalUserSelect = (exUser: CaseSearchItem) => {
+  const handleExternalUserSelect = (exUser: CaseSearchNewItem) => {
     change('name', exUser.name)
     change('surname', exUser.surname)
     change('patronymicName', exUser.partName)
     change('individualId', exUser.individualId)
     change('dob', exUser.dob)
+    change('gender', exUser.gender)
+    change('phoneNumber', exUser.phoneNumber)
   }
 
   useEffect(() => {

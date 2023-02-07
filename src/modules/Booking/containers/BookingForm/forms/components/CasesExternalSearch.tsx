@@ -5,16 +5,16 @@ import {
   Typography,
 } from '@mui/material'
 import { useDebounce } from 'hooks'
-import { useGetApplicationQuery } from 'modules/Application/applicationService'
+// import { useGetApplicationQuery } from 'modules/Application/applicationService'
 import {
-  CaseSearchItem,
-  useCaseSearchMutation,
+  CaseSearchNewItem,
+  useCaseSearchNewQuery,
 } from 'modules/Booking/state/externalSearchService'
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface CasesExternalSearchProps {
-  onSelect: (v: CaseSearchItem) => void
+  onSelect: (v: CaseSearchNewItem) => void
 }
 
 export const CasesExternalSearch = ({ onSelect }: CasesExternalSearchProps) => {
@@ -22,27 +22,33 @@ export const CasesExternalSearch = ({ onSelect }: CasesExternalSearchProps) => {
   const [value, setValue] = useState<string>('')
   const searchString = useDebounce(value, 750)
 
-  const applicationQuery = useGetApplicationQuery(null)
-  const [casesSearch, { data, isLoading }] = useCaseSearchMutation()
+  // const applicationQuery = useGetApplicationQuery(null)
+  const { data, isLoading } = useCaseSearchNewQuery({
+    text: searchString,
+  })
 
-  useEffect(() => {
-    if (!applicationQuery.data) return
-    casesSearch({
-      params: {
-        text: searchString,
-        pageSize: 20,
-        pageNumber: 0,
-        sortBy: 'openCaseDate',
-      },
-      externalApi: applicationQuery.data,
-    })
-  }, [searchString])
+  const loadedData = useMemo<Array<CaseSearchNewItem>>(
+    () => (data !== undefined ? data : []),
+    [data]
+  )
+  // useEffect(() => {
+  //   if (!applicationQuery.data) return
+  //   casesSearch({
+  //     params: {
+  //       text: searchString,
+  //       pageSize: 20,
+  //       pageNumber: 0,
+  //       sortBy: 'openCaseDate',
+  //     },
+  //     externalApi: applicationQuery.data,
+  //   })
+  // }, [searchString])
 
   return (
     <>
       <Autocomplete
         id="external_user_search"
-        options={data ? data.content : []}
+        options={loadedData}
         fullWidth
         loading={isLoading}
         noOptionsText={t('Nothing find')}
@@ -57,7 +63,11 @@ export const CasesExternalSearch = ({ onSelect }: CasesExternalSearchProps) => {
           <li {...props}>
             {option.surname} {option.name} {option.partName}
             <Typography variant="caption" color="text.secondary" ml={3}>
-              {option.openCaseDate}
+              {option.gender === 'MALE' && <>{t('Male')}</>}
+              {option.gender === 'FEMALE' && <>{t('Female')}</>}
+            </Typography>
+            <Typography variant="caption" color="text.secondary" ml={3}>
+              {option.dob}
             </Typography>
             <Typography variant="caption" color="text.secondary" ml={3}>
               {option.individualId}

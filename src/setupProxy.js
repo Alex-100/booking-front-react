@@ -3,7 +3,17 @@ require('dotenv').config()
 
 module.exports = function (app) {
   app.use(
-    createProxyMiddleware('/api_external',{
+    createProxyMiddleware('/api_external_new', {
+      target: process.env.SERVICE_API_EXTERNAL_2,
+      changeOrigin: true,
+      logLevel: 'debug',
+      followRedirects: false,
+      onError: (err, req, res) => console.log(err),
+      pathRewrite: {
+        '^/api_external_new': '',
+      },
+    }),
+    createProxyMiddleware('/api_external', {
       target: process.env.SERVICE_API_EXTERNAL,
       changeOrigin: true,
       logLevel: 'debug',
@@ -22,8 +32,7 @@ module.exports = function (app) {
       pathRewrite: {
         '^/api': '',
       },
-    }),
-    
+    })
   )
 }
 // pathRewrite: (path) => path.replace('/api','/')
