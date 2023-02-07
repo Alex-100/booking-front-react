@@ -64,7 +64,10 @@ export const roomService = createApi({
       query: (params) =>
         `room/total/places?${new URLSearchParams(params as any).toString()}`,
     }),
-    getPlaceListForBooking: builder.mutation<Array<number>, PalaceSelectorParams>({
+    getPlaceListForBooking: builder.mutation<
+      Array<number>,
+      PalaceSelectorParams
+    >({
       query: (params) =>
         `/room/list?${new URLSearchParams(params as any).toString()}`,
     }),

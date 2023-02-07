@@ -24,7 +24,7 @@ import { dateMask, phoneMask } from 'utils/masks'
 import { LoadingButton } from '@mui/lab'
 import { FormProps } from '../../../../../components/redux-form/types'
 import { CasesExternalSearch } from './components/CasesExternalSearch'
-import { CaseSearchItem } from 'modules/Booking/state/externalSearchService'
+import { CaseSearchNewItem } from 'modules/Booking/state/externalSearchService'
 import { PlaceModel } from 'modules/Room/types'
 import { useEffect, useState } from 'react'
 import { useGetRoomByPlaceIdMutation } from 'modules/Room/services/roomService'
@@ -94,12 +94,14 @@ export const IndividualBookingForm = reduxForm<BookingCreateForm, Props>({
   //     })
   //   }
 
-  const handleExternalUserSelect = (exUser: CaseSearchItem) => {
+  const handleExternalUserSelect = (exUser: CaseSearchNewItem) => {
     change('name', exUser.name)
     change('surname', exUser.surname)
     change('patronymicName', exUser.partName)
     change('individualId', exUser.individualId)
     change('dob', exUser.dob)
+    change('gender', exUser.gender)
+    change('phoneNumber', exUser.phoneNumber)
   }
 
   useEffect(() => {
@@ -225,6 +227,23 @@ export const IndividualBookingForm = reduxForm<BookingCreateForm, Props>({
                   component={renderTextField}
                   {...dateMask}
                 />
+                <Field
+                  name="gender"
+                  label={t('Gender')}
+                  component={renderSelectField}
+                >
+                  <MenuItem value="">
+                    <em>{t('None')}</em>
+                  </MenuItem>
+                  <MenuItem value="MALE">{t('Male')}</MenuItem>
+                  <MenuItem value="FEMALE">{t('Female')}</MenuItem>
+                </Field>
+              </Stack>
+              <Stack
+                spacing={3}
+                direction={matchSm ? 'row' : 'column'}
+                width="100%"
+              >
                 <Field
                   name="individualId"
                   label={t('Individual ID')}

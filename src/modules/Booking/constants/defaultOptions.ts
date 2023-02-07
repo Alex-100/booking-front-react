@@ -52,4 +52,4 @@ export const statusOfBookingOptionsFn = (): [StatusOfBookingEnum, string][] => {
   ]
 }
 
-export const DAYS_INCREMENT_OPTIONS = [10, 12, 14, 16, 18]
+export const DAYS_INCREMENT_OPTIONS = [10, 12, 14, 16, 18, 20]

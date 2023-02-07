@@ -137,6 +137,14 @@ const StatisticSubMemu = () => {
             <ListItemText primary={t('statistic.users')} />
           </ListItemButton>
         </Link>
+        <Link to="/stat/bookingOfUsers/date/brief">
+          <ListItemButton
+            selected={location.pathname === '/stat/bookingOfUsers/date/brief'}
+          >
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.users_brief')} />
+          </ListItemButton>
+        </Link>
       </List>
     </>
   )
@@ -308,7 +316,8 @@ const Dashboard: React.FC = ({ children }) => {
                 location.pathname === '/statistic/department' ||
                 location.pathname === '/statistic/paid' ||
                 location.pathname === '/statistic/rooms' ||
-                location.pathname === '/statistic/users'
+                location.pathname === '/statistic/users' ||
+                location.pathname === '/stat/bookingOfUsers/date/brief'
               }
               onClick={handleStateStatisticMenu}
             >

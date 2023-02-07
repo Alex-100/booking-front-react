@@ -16,6 +16,7 @@ import DateRangeContainer from './containers/Filters/DateRangeContainer'
 import PaginationContainer from './containers/Filters/PaginationContainer'
 import { useTranslation } from 'react-i18next'
 import ScheluderContainerNew from './containers/SchedulerContainerNew'
+import { SearchContainer } from './containers/Filters/SearchContainer'
 
 const BookingPage = () => {
   const [filtersModalOpen, setFiltersModalOpen] = React.useState(false)
@@ -51,6 +52,7 @@ const BookingPage = () => {
             {t('Booking')}
             <Typography variant="caption" sx={{ ml: 1.5 }}></Typography>
           </Typography>
+          <SearchContainer />
           <Stack direction="row" spacing={4}>
             <DateRangeContainer />
             {/* <FiltersViewContainer /> */}

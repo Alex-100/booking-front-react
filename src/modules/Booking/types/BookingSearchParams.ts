@@ -15,4 +15,5 @@ export interface BookingSearchParams extends PaginationParams {
   typeOfBooking?: TypeOfBookingEnum
   statusOfBooking?: StatusOfBookingEnum
   test?: string
+  search?: string
 }

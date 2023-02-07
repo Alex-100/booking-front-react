@@ -25,6 +25,22 @@ export interface CaseSearchItem {
   ]
 }
 
+export interface CaseSearchNewItem {
+  caseId: number
+  name: string
+  partName: string
+  surname: string
+  dob: string // '2022-09-21'
+  gender: string
+  individualId: string
+  phoneNumber: string
+  caseType: string
+  stageRecord: string
+  fundingSource: string
+  openCaseDate: string // '2022-09-21'
+  closeCaseDate: string // '2022-09-21'
+}
+
 export interface PersonItem {
   individualId: string
   name: string
@@ -69,6 +85,10 @@ const headers = (externalApi: ExternalApiType) => ({
   )}`,
 })
 
+type CasesSearchNewParam = {
+  text: string
+}
+
 export const externalSearchService = createApi({
   reducerPath: 'externalSearchService',
   baseQuery: externalAPIQuery,
@@ -84,6 +104,15 @@ export const externalSearchService = createApi({
         method: 'get',
       }),
     }),
+    caseSearchNew: builder.query<Array<CaseSearchNewItem>, CasesSearchNewParam>(
+      {
+        query: (params) => ({
+          url: `/api_external_new/search/person?${getURLSearchParams(params)}`,
+          // headers: headers(externalApi),
+          method: 'get',
+        }),
+      }
+    ),
     findEmployee: builder.mutation<
       ObjectsList<EmployeeItem>,
       ExternalSearchServiceParams<PaginationParams>
@@ -109,6 +138,7 @@ export const externalSearchService = createApi({
 
 export const {
   useCaseSearchMutation,
+  useCaseSearchNewQuery,
   useFindPersonByIdMutation,
   useFindEmployeeMutation,
 } = externalSearchService

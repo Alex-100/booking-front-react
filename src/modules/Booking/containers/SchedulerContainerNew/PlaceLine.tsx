@@ -10,6 +10,8 @@ import React, { useMemo, useState } from 'react'
 import { useAppSelector } from 'store'
 import { PlaceLinePoppover } from './PlaceLinePoppover'
 
+import { pink, blue } from '@mui/material/colors'
+
 interface PlaceLineProps {
   place: PlaceModel
   booking: BookingModel
@@ -138,7 +140,23 @@ export const PlaceLine = ({ place, booking, canEdit }: PlaceLineProps) => {
             borderRadius: isOverflow ? '8px 0 0 8px' : 8,
             marginTop: '11px',
             bgcolor: color,
+            ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
+              booking.gender === 'MALE' && {
+                bgcolor: blue[400],
+              }),
+            ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
+              booking.gender === 'FEMALE' && {
+                bgcolor: pink[200],
+              }),
             borderColor: borderColor,
+            ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
+              booking.gender === 'MALE' && {
+                borderColor: blue[400],
+              }),
+            ...(booking.typeOfBooking === TypeOfBookingEnum.INDIVIDUAL &&
+              booking.gender === 'FEMALE' && {
+                borderColor: pink[200],
+              }),
           }}
           component="button"
           onClick={handleClickOnBookingLine}

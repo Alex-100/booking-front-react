@@ -54,6 +54,9 @@ const bookingFiltersSlice = createSlice({
       if (action.payload.startDate) state.from = action.payload.startDate
       if (action.payload.endDate) state.to = action.payload.endDate
     },
+    setSearch(state, action: PayloadAction<string>) {
+      state.text = action.payload
+    },
     setFilters(
       state,
       action: PayloadAction<
@@ -137,6 +140,7 @@ export const {
   setFilters,
   setPageNumber,
   setPageSize,
+  setSearch,
   removeFilter,
 } = bookingFiltersSlice.actions
 export default bookingFiltersSlice.reducer

@@ -28,6 +28,7 @@ export interface BookingModel {
   place: PlaceModel
   appUser: UserModel
   comboRate: ComboRateModel
+  gender?: string
 }
 
 export interface BookingCreateForm {

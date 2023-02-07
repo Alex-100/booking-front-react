@@ -76,6 +76,16 @@ const ApplicationForm = reduxForm<ApplicationModel, FormProps>({
           component={renderTextField}
         />
         <Field
+          name="languageTag"
+          component={renderSelectField}
+          label={t('Error language')}
+          required
+          validate={[validators.required]}
+        >
+          <MenuItem value="ru">{t('Russian')}</MenuItem>
+          <MenuItem value="en">{t('English')}</MenuItem>
+        </Field>
+        <Field
           name="timeDefaultEntering"
           component={renderTextField}
           label={t('Entering time')}

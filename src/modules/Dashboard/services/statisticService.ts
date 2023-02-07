@@ -7,6 +7,7 @@ import {
   UsersBookingStatModel,
 } from '../types'
 import { getURLSearchParams } from '../../../utils'
+import { UsersBookingBriefStatProps } from '../types/UsersBookingBriefStat'
 
 export const statisticService = createApi({
   reducerPath: 'statisticService',
@@ -22,6 +23,13 @@ export const statisticService = createApi({
     >({
       query: (params) => `stat/daily/hospital?${getURLSearchParams(params)}`,
     }),
+    getUsersBookingBriefStat: builder.query<
+      UsersBookingStatModel[],
+      UsersBookingBriefStatProps
+    >({
+      query: (params) =>
+        `/stat/bookingOfUsers/date/brief?${getURLSearchParams(params)}`,
+    }),
     getUsersBookingStat: builder.query<UsersBookingStatModel[], null>({
       query: () => `stat/bookingOfUsers/all/brief`,
     }),
@@ -31,5 +39,6 @@ export const statisticService = createApi({
 export const {
   useGetDailyStatQuery,
   useGetDailyStatForHospitalQuery,
+  useGetUsersBookingBriefStatQuery,
   useGetUsersBookingStatQuery,
 } = statisticService
