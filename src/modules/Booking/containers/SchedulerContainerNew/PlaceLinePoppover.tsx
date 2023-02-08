@@ -203,7 +203,12 @@ export const PlaceLinePoppover = ({
               )}
             </Typography>
           </Stack>
-          {booking.individualId && (
+          {(booking.individualId ||
+            booking.gender ||
+            booking.dob ||
+            booking.surname ||
+            booking.name ||
+            booking.patronymicName) && (
             <>
               <Paper variant="outlined" sx={{ p: 1 }}>
                 <Stack direction="row" spacing={1}>
@@ -214,29 +219,35 @@ export const PlaceLinePoppover = ({
                     {booking.surname} {booking.name} {booking.patronymicName}
                   </Typography>
                 </Stack>
-                <Stack direction="row" spacing={1}>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    {t('Birth date')}:{' '}
-                  </Typography>
-                  <Typography>
-                    {booking.appUser.dob ? (
-                      <>
-                        {format(
-                          parseISO(booking.dob),
-                          i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
-                        )}
-                      </>
-                    ) : (
-                      ''
-                    )}
-                  </Typography>
-                </Stack>
-                <Stack direction="row" spacing={1}>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    IID:{' '}
-                  </Typography>
-                  <Typography>{booking.individualId}</Typography>
-                </Stack>
+                {booking.dob && (
+                  <Stack direction="row" spacing={1}>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      {t('Birth date')}:{' '}
+                    </Typography>
+                    <Typography>
+                      {booking.dob ? (
+                        <>
+                          {format(
+                            parseISO(booking.dob),
+                            i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+                          )}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </Typography>
+                  </Stack>
+                )}
+
+                {booking.individualId && (
+                  <Stack direction="row" spacing={1}>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      IID:{' '}
+                    </Typography>
+                    <Typography>{booking.individualId}</Typography>
+                  </Stack>
+                )}
+
                 {booking.gender !== null && (
                   <Stack direction="row" spacing={1}>
                     <Typography variant="subtitle2" color="text.secondary">
