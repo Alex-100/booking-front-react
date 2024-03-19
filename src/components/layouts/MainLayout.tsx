@@ -46,6 +46,7 @@ import { useTranslation } from 'react-i18next'
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { ExternalLink } from 'components/external_link'
 
 const drawerWidth: number = 240
 
@@ -246,6 +247,10 @@ const Dashboard: React.FC = ({ children }) => {
               <ApplicationHeader />
             </Box>
           </Toolbar>
+          <Box sx={{ p: 1, justifyItems: 'center' }}>
+            <ExternalLink />
+          </Box>
+
           <Box sx={{ m: 2 }}>
             <Stack
               sx={{
