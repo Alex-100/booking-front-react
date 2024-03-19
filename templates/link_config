@@ -1,0 +1,4 @@
+{
+  "link": "${BOOKING_EXTERNAL_LINK_URL}",
+  "description": "${BOOKING_EXTERNAL_LINK_DESCRIPTION}"
+}
