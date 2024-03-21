@@ -38,6 +38,7 @@ const baseQuery: BaseQueryFn<
       })
 
       localStorage.setItem('auth', JSON.stringify(response.data))
+      window.dispatchEvent(new Event('auth_info_changed'))
       result = await fetchQuery(args, api, extraOptions)
     } catch (err) {
       // @ts-ignore
