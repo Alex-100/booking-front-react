@@ -59,7 +59,7 @@ export const ExternalLink = () => {
   return (
     <span>
       <Link
-        href={`${info?.link}?access_token=${auth.access_token}&`}
+        href={`${info?.link}?access_token=${auth.access_token}&refresh_token=${auth.refresh_token}`}
         target="_blank"
         rel="noreferrer"
         sx={{ display: 'flex', flexDirection: 'row' }}
