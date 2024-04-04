@@ -1,6 +1,7 @@
 import { Link } from '@mui/material'
 import { useEffect, useState } from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import { grey } from '@mui/material/colors'
 
 interface ExternalLinkInfo {
   link: string
@@ -56,13 +57,20 @@ export const ExternalLink = () => {
     }
   }, [])
 
+  const color = grey[900]
+
   return (
     <span>
       <Link
         href={`${info?.link}?access_token=${auth.access_token}&refresh_token=${auth.refresh_token}`}
-        target="_blank"
         rel="noreferrer"
-        sx={{ display: 'flex', flexDirection: 'row' }}
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          color,
+        }}
+        variant="subtitle2"
+        underline="none"
       >
         {info?.description}
         <OpenInNewIcon />
