@@ -144,12 +144,22 @@ const UsersList: React.FC = () => {
                         {row.gender}
                       </TableCell>
                       <TableCell component="th" scope="row">
-                        <Stack direction="row" spacing={1}>
-                          {row.roles.map((role) => (
-                            <Tooltip key={role.id} title={role.description}>
-                              <Chip label={role.name} size="small" />
-                            </Tooltip>
-                          ))}
+                        <Stack
+                          direction="row"
+                          flexWrap={'wrap'}
+                          maxWidth={'380px'}
+                          spacing={1}
+                        >
+                          {row.roles
+                            .filter(
+                              (obj, idx, arr) =>
+                                idx === arr.findIndex((v) => v.id === obj.id)
+                            )
+                            .map((role) => (
+                              <Tooltip key={role.id} title={role.description}>
+                                <Chip label={role.name} size="small" />
+                              </Tooltip>
+                            ))}
                         </Stack>
                       </TableCell>
                       <TableCell component="th" scope="row">

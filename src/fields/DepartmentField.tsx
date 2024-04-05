@@ -27,7 +27,7 @@ const DepartmentField = () => {
           <MenuItem key={department.id} value={JSON.stringify(department)}>
             <ListItemText>{department.name}</ListItemText>
             <Typography variant="body2" color="text.secondary">
-              {department.description}
+              {department.hospital.name || ''} {department.description}
             </Typography>
           </MenuItem>
         ))}
