@@ -1,4 +1,4 @@
-import { Link } from '@mui/material'
+import { Box, Link } from '@mui/material'
 import { useEffect, useState } from 'react'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import { grey } from '@mui/material/colors'
@@ -60,13 +60,24 @@ export const ExternalLink = () => {
   const color = grey[900]
 
   return (
-    <span>
+    <Box
+      sx={{
+        bgcolor: (theme) => theme.palette.grey.A100,
+        width: '100%',
+        paddingY: 2,
+        borderRadius: 2,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
       <Link
         href={`${info?.link}?access_token=${auth.access_token}&refresh_token=${auth.refresh_token}`}
         rel="noreferrer"
         sx={{
           display: 'flex',
           flexDirection: 'row',
+          gap: 1,
           color,
         }}
         variant="subtitle2"
@@ -75,6 +86,6 @@ export const ExternalLink = () => {
         {info?.description}
         <OpenInNewIcon />
       </Link>
-    </span>
+    </Box>
   )
 }

@@ -247,7 +247,7 @@ const Dashboard: React.FC = ({ children }) => {
               <ApplicationHeader />
             </Box>
           </Toolbar>
-          <Box sx={{ p: 1, justifyItems: 'center' }}>
+          <Box sx={{ m: 2, mb: 0, justifyItems: 'center' }}>
             <ExternalLink />
           </Box>
 
