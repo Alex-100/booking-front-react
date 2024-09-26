@@ -37,6 +37,14 @@ interface Props extends FormProps {
   initialPlace?: PlaceModel
 }
 
+const availableFoundation = [
+  'PUBLIC_INSURANCE',
+  'PRIVATE_INSURANCE',
+  'PAID_BY_COMPANY',
+  'PAID_BY_CITIZENS',
+  'OTHER',
+]
+
 export const IndividualBookingForm = reduxForm<BookingCreateForm, Props>({
   form: 'autoBooking',
   enableReinitialize: true,
@@ -149,7 +157,11 @@ export const IndividualBookingForm = reduxForm<BookingCreateForm, Props>({
                   validate={[validators.required]}
                 >
                   {sourceFundingOptionsFn().map(([k, l]) => (
-                    <MenuItem value={k} key={k}>
+                    <MenuItem
+                      value={k}
+                      key={k}
+                      disabled={!availableFoundation.includes(k)}
+                    >
                       {l}
                     </MenuItem>
                   ))}
