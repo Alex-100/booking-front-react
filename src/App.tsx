@@ -22,6 +22,7 @@ import { StatisticUsersPage } from 'modules/Statistic/pages/StatisticUsersPage'
 import { StatisticCommonPage } from 'modules/Statistic/pages/StatisticCommonPage'
 import { StatisticUsersBriefPage } from 'modules/Statistic/pages/StatisticUsersBriefPage'
 import { StatisticRoomsStatusPage } from 'modules/Statistic/pages/StatisticRoomsStatusPage'
+import { StatisticRoomsLabelPage } from 'modules/Statistic/pages/StatisticRoomsLabel'
 
 const App: React.FC = () => {
   return (
@@ -69,6 +70,12 @@ const App: React.FC = () => {
             component={StatisticRoomsStatusPage}
             exact
           />
+          <Route
+            path={'/statistic/rooms_label'}
+            component={StatisticRoomsLabelPage}
+            exact
+          />
+
           <Route path="/roles" component={RolesPage} exact />
           <Route path="/users" component={UsersPage} exact />
           <Route path="/labels" component={LabelsPage} exact />

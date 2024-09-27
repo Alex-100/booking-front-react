@@ -13,6 +13,7 @@
     "pay": "Paid",
     "rooms": "Rooms",
     "rooms_status": "Booking (Table)",
+    "rooms_label": "statistic.rooms_label",
     "users": "Users",
     "users_brief": "Users (date)"
   },
@@ -239,6 +240,7 @@
   "Total": "Total",
   "Paid": "Paid",
   "Unpaid": "Unpaid",
+  "Period": "Period",
   "Rooms amount": "Rooms amount",
   "Places amount": "Places amount",
   "FIO": "FIO",
