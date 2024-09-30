@@ -29,6 +29,7 @@ import {
 } from 'services'
 import { useAppSelector } from 'store'
 import { useGetDailyStatForHospitalByLabelQuery } from '../services/statisticServiceN'
+import { FreePlaceInfo } from '../components/FreePlaceInfo'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -321,9 +322,19 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                         {row.department.name}
                       </TableCell>
                       {dailyStatValues.map(({ key }) => (
-                        <TableCell key={key}>
-                          {row.totalDailyStat[key]}
-                        </TableCell>
+                        <>
+                          {key !== 'placesFree' ? (
+                            <TableCell key={key}>
+                              {row.totalDailyStat[key]}
+                            </TableCell>
+                          ) : (
+                            <FreePlaceInfo
+                              key={key}
+                              count={row.totalDailyStat[key]}
+                              freeRooms={row.freeRooms}
+                            />
+                          )}
+                        </>
                       ))}
                     </TableRow>
                   ))}
