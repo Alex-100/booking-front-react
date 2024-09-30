@@ -1,12 +1,14 @@
 import { Box, List, ListItemButton, Popover, TableCell } from '@mui/material'
 import { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 interface FreePlaceInfoProps {
   count: number
-  freeRooms: Array<{ room: number; place: number }>
+  freeRooms: Array<{ room: number; place: number; roomId: number }>
 }
 
 export const FreePlaceInfo = ({ freeRooms, count }: FreePlaceInfoProps) => {
+  const navigate = useHistory()
   const [anchorEl, setAnchorEl] = useState<HTMLTableCellElement | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLTableCellElement>) => {
@@ -17,8 +19,9 @@ export const FreePlaceInfo = ({ freeRooms, count }: FreePlaceInfoProps) => {
     setAnchorEl(null)
   }
 
-  const handleSelectRoom = () => {
+  const handleSelectRoom = (id: number) => {
     handleClose()
+    navigate.push(`/rooms/${id}`)
   }
 
   const open = Boolean(anchorEl)
@@ -55,7 +58,7 @@ export const FreePlaceInfo = ({ freeRooms, count }: FreePlaceInfoProps) => {
             component={'nav'}
           >
             {freeRooms.map((v) => (
-              <ListItemButton onClick={handleSelectRoom}>
+              <ListItemButton onClick={() => handleSelectRoom(v.roomId)}>
                 <Box
                   sx={{
                     display: 'flex',

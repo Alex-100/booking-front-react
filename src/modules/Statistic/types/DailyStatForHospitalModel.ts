@@ -11,8 +11,8 @@ export interface DailyStatForHospitalModelWithLabels {
   hospital: HospitalModel
   department: DepartmentModel
   totalDailyStat: DailyStatModel
-  freeRooms: Array<{ room: number; place: number }>
-  takenRooms: Array<{ room: number; place: number }>
+  freeRooms: Array<{ room: number; place: number; roomId: number }>
+  takenRooms: Array<{ room: number; place: number; roomId: number }>
 }
 
 // [
