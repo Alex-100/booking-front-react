@@ -15,6 +15,7 @@ import {
   TableCell,
   TableBody,
   TextField,
+  Button,
 } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
@@ -34,6 +35,7 @@ import format from 'date-fns/format'
 import startOfDay from 'date-fns/startOfDay'
 import endOfDay from 'date-fns/endOfDay'
 import parseISO from 'date-fns/parseISO'
+import { Print } from '@mui/icons-material'
 // import { useAppSelector } from 'store'
 
 // const ITEM_HEIGHT = 48
@@ -179,6 +181,128 @@ export const StatisticRoomsStatusPage = () => {
     }
   }
 
+  const handlePrint = () => {
+    const printWnd = window.open('', '_blank')
+    const th = `
+      <tr>
+        <th>${t('Hospital')}</th>
+        <th>${t('Department')}</th>
+        <th>${t('Room')}</th>
+        <th>${t('Label')}</th>
+        <th>${t('FIO')}</th>
+        <th>${t('Birth Date')}</th>
+        <th>${t('Entering date')}</th>
+        <th>${t('Leaving date')}</th>
+      </tr>
+    `
+    const style = `<style type="text/css">
+      table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+    </style>`
+
+    const rows = unpacketPlaces.map(
+      (v) => `<tr>
+      <td>${v.hospital}</td>
+      <td>${v.department}</td>
+      <td>${v.place}</td>
+      <td>${v.placeLabel}</td>
+      <td>${v.fio}</td>
+      <td>${
+        v.birthDate !== ''
+          ? format(
+              parseISO(v.birthDate),
+              i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+            )
+          : ''
+      }</td>
+      <td>${
+        v.enteringDate !== ''
+          ? format(
+              parseISO(v.enteringDate),
+              i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+            )
+          : ''
+      }</td>
+      <td>
+      ${
+        v.leavingDate !== ''
+          ? format(
+              parseISO(v.leavingDate),
+              i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+            )
+          : ''
+      }</td>
+    </tr>`
+    )
+    printWnd?.document.write(
+      `<html>
+        <head>${style}</head>
+        <body>
+          <table style="width: 100%">
+            ${th}
+            <tbody>
+              ${rows.join('')}
+            </tbody>
+          </table>
+        </body>
+      ,</html>`
+    )
+
+    /**
+     * 
+     *  {unpacketPlaces.map((v, idx) => (
+                <TableRow key={idx}>
+                  <TableCell>{v.hospital}</TableCell>
+                  <TableCell>{v.department}</TableCell>
+                  <TableCell>{v.place}</TableCell>
+                  <TableCell>
+                    <Typography color={v.color}>{v.placeLabel}</Typography>
+                  </TableCell>
+                  <TableCell>{v.fio}</TableCell>
+                  <TableCell>
+                    {v.birthDate !== '' && (
+                      <Typography>
+                        {format(
+                          parseISO(v.birthDate),
+                          i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+                        )}
+                      </Typography>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {v.enteringDate !== '' && (
+                      <Typography>
+                        {format(
+                          parseISO(v.enteringDate),
+                          i18n.language === 'ru'
+                            ? 'dd.MM.yyyy HH:mm'
+                            : 'yyyy-MM-dd HH:mm'
+                        )}
+                      </Typography>
+                    )}
+
+                    
+                    </TableCell>
+                    <TableCell>
+                      {v.leavingDate !== '' && (
+                        <Typography>
+                          {format(
+                            parseISO(v.leavingDate),
+                            i18n.language === 'ru'
+                              ? 'dd.MM.yyyy HH:mm'
+                              : 'yyyy-MM-dd HH:mm'
+                          )}
+                        </Typography>
+                      )}
+                    </TableCell>
+                  </TableRow>
+     */
+    printWnd?.print()
+    // printWnd?.close()
+  }
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -221,7 +345,7 @@ export const StatisticRoomsStatusPage = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item lg={6} xs={12} md={6} sm={12}>
+            <Grid item lg={4} xs={12} md={4} sm={12}>
               <FormControl
                 sx={{ m: 1, minWidth: 140 }}
                 fullWidth
@@ -245,6 +369,20 @@ export const StatisticRoomsStatusPage = () => {
                     </MenuItem>
                   ))}
                 </Select>
+              </FormControl>
+            </Grid>
+            <Grid item lg={2} md={2} xs={12} sm={12}>
+              <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  size="large"
+                  sx={{ height: '56px' }}
+                  onClick={handlePrint}
+                >
+                  <Print />
+                  {t('Print')}
+                </Button>
               </FormControl>
             </Grid>
           </Grid>
