@@ -1,5 +1,6 @@
 import { Box, List, ListItemButton, Popover, TableCell } from '@mui/material'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router-dom'
 
 interface FreePlaceInfoProps {
@@ -9,6 +10,7 @@ interface FreePlaceInfoProps {
 
 export const FreePlaceInfo = ({ freeRooms, count }: FreePlaceInfoProps) => {
   const navigate = useHistory()
+  const { t } = useTranslation()
   const [anchorEl, setAnchorEl] = useState<HTMLTableCellElement | null>(null)
 
   const handleClick = (event: React.MouseEvent<HTMLTableCellElement>) => {
@@ -47,10 +49,10 @@ export const FreePlaceInfo = ({ freeRooms, count }: FreePlaceInfoProps) => {
             vertical: 'top',
             horizontal: 'center',
           }}
+          sx={{ maxHeight: 500 }}
         >
           <List
             sx={{
-              maxHeight: 200,
               minWidth: 280,
               maxWidth: 460,
               bgcolor: 'background.paper',
@@ -58,16 +60,31 @@ export const FreePlaceInfo = ({ freeRooms, count }: FreePlaceInfoProps) => {
             component={'nav'}
           >
             {freeRooms.map((v) => (
-              <ListItemButton onClick={() => handleSelectRoom(v.roomId)}>
+              <ListItemButton
+                onClick={() => handleSelectRoom(v.roomId)}
+                sx={{
+                  paddingY: '1px',
+                  paddingLeft: '8px',
+                  paddingRight: '24px',
+                }}
+              >
                 <Box
                   sx={{
                     display: 'flex',
                     justifyContent: 'space-between',
                     padding: '8px 16px',
                     width: '100%',
+                    ':hover': {
+                      color: '#1976d2',
+                    },
                   }}
                 >
-                  <span>Кабинет {v.room}</span> <span>Место {v.place}</span>
+                  <span>
+                    {t('Room')} {v.room}
+                  </span>{' '}
+                  <span>
+                    {t('Place')} {v.place}
+                  </span>
                 </Box>
               </ListItemButton>
             ))}
