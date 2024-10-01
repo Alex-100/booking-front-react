@@ -27,9 +27,16 @@ import {
   useGetAllLabelsQuery,
   useGetDepartmentsByHospitalQuery,
 } from 'services'
-import { useAppSelector } from 'store'
+import { useAppDispatch, useAppSelector } from 'store'
 import { useGetDailyStatForHospitalByLabelQuery } from '../services/statisticServiceN'
 import { FreePlaceInfo } from '../components/FreePlaceInfo'
+import { filterByRoom } from 'modules/Booking/state/bookingFiltersSlice'
+import parseISO from 'date-fns/parseISO'
+import addDays from 'date-fns/addDays'
+import format from 'date-fns/format'
+import startOfDay from 'date-fns/startOfDay'
+import endOfDay from 'date-fns/endOfDay'
+import { useHistory } from 'react-router-dom'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -44,6 +51,8 @@ const MenuProps = {
 
 export const StatisticRoomsLabelPage = (): JSX.Element => {
   const { t } = useTranslation()
+  const navigate = useHistory()
+  const dispatch = useAppDispatch()
   const d = useAppSelector((state) => state.dailyStatFilters)
 
   const [selectedHospital, setSelectedHospital] = useState('')
@@ -161,6 +170,22 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     }
     return total
   }, [dailyStatValues, hospitalsData, isSuccess])
+
+  const handleRoomSelect = (roomId: number) => {
+    console.log('D = ', roomId, d.date)
+    const tmpDate = parseISO(d.date)
+
+    const sDate = startOfDay(addDays(tmpDate, -14))
+    const eDate = endOfDay(addDays(tmpDate, 14))
+    dispatch(
+      filterByRoom({
+        startDate: format(sDate, 'yyyy-MM-dd HH:mm'),
+        endDate: format(eDate, 'yyyy-MM-dd HH:mm'),
+        roomIdList: roomId,
+      })
+    )
+    navigate.push('/booking')
+  }
 
   return (
     <>
@@ -332,6 +357,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                               key={key}
                               count={row.totalDailyStat[key]}
                               freeRooms={row.freeRooms}
+                              onRoomSelect={handleRoomSelect}
                             />
                           )}
                         </>

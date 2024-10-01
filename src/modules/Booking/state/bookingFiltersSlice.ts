@@ -54,6 +54,23 @@ const bookingFiltersSlice = createSlice({
       if (action.payload.startDate) state.from = action.payload.startDate
       if (action.payload.endDate) state.to = action.payload.endDate
     },
+    filterByRoom(
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        startDate: string
+        endDate: string
+        roomIdList: number
+      }>
+    ) {
+      state.from = payload.startDate
+      state.to = payload.endDate
+      state.roomIdList = payload.roomIdList
+    },
+    clearRoomFilter(state) {
+      state.roomIdList = undefined
+    },
     setSearch(state, action: PayloadAction<string>) {
       state.text = action.payload
     },
@@ -137,6 +154,8 @@ const bookingFiltersSlice = createSlice({
 
 export const {
   setDateRange,
+  filterByRoom,
+  clearRoomFilter,
   setFilters,
   setPageNumber,
   setPageSize,

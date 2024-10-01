@@ -6,6 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { useAppDispatch, useAppSelector } from '../../../../store'
 import { BookingSearchParams } from '../../types/BookingSearchParams'
 import {
+  clearRoomFilter,
   loadInitialStateFilter,
   setFilters,
 } from '../../state/bookingFiltersSlice'
@@ -24,6 +25,7 @@ const FiltersFormContainer: React.FC<Props> = ({ open, onClose }) => {
   const handleSubmitFilters = (
     filters: Omit<BookingSearchParams, 'enteringDateTo' | 'enteringDateFrom'>
   ) => {
+    dispatch(clearRoomFilter())
     dispatch(setFilters(filters))
     onClose()
   }
