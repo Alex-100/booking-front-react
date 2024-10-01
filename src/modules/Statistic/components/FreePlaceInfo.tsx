@@ -62,8 +62,9 @@ export const FreePlaceInfo = ({
             }}
             component={'nav'}
           >
-            {freeRooms.map((v) => (
+            {freeRooms.map((v, idx) => (
               <ListItemButton
+                key={idx}
                 onClick={() => handleSelectRoom(v.roomId)}
                 sx={{
                   paddingY: '1px',

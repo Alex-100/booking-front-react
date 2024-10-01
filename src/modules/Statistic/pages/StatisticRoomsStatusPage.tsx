@@ -83,9 +83,14 @@ export const StatisticRoomsStatusPage = () => {
   }
 
   //   const { data: departments } = useGetAllDepartmentsQuery({ page: 0 })
-  const { data: hospitalDepartments } = useGetDepartmentsByHospitalQuery({
-    hospitalId: (selectedHospital as unknown) as number,
-  })
+  const { data: hospitalDepartments } = useGetDepartmentsByHospitalQuery(
+    {
+      hospitalId: (selectedHospital as unknown) as number,
+    },
+    {
+      skip: selectedHospital === '',
+    }
+  )
 
   // const availableHospitalDepartments = useMemo(
   //   () =>

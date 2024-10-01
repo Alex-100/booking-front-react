@@ -19,7 +19,7 @@ import {
   Typography,
 } from '@mui/material'
 import { dailyStatValues, dailyStatValuesFn } from 'modules/Dashboard/constants'
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   //   useGetAllDepartmentsQuery,
@@ -347,7 +347,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                         {row.department.name}
                       </TableCell>
                       {dailyStatValues.map(({ key }) => (
-                        <>
+                        <Fragment key={key}>
                           {key !== 'placesFree' ? (
                             <TableCell key={key}>
                               {row.totalDailyStat[key]}
@@ -360,7 +360,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                               onRoomSelect={handleRoomSelect}
                             />
                           )}
-                        </>
+                        </Fragment>
                       ))}
                     </TableRow>
                   ))}
