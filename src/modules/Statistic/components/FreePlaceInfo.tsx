@@ -1,11 +1,18 @@
-import { Box, List, ListItemButton, Popover, TableCell } from '@mui/material'
+import {
+  Box,
+  Button,
+  List,
+  ListItemButton,
+  Popover,
+  TableCell,
+} from '@mui/material'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface FreePlaceInfoProps {
   count: number
   freeRooms: Array<{ room: number; place: number; roomId: number }>
-  onRoomSelect: (roomId: number) => void
+  onRoomSelect: (roomId: number | Array<number>) => void
 }
 
 export const FreePlaceInfo = ({
@@ -27,6 +34,19 @@ export const FreePlaceInfo = ({
   const handleSelectRoom = (id: number) => {
     handleClose()
     onRoomSelect(id)
+  }
+
+  const handleSelectAllRooms = () => {
+    // const ids = freeRooms.map(({ roomId }) => roomId)
+    const ids = freeRooms.reduce<Array<number>>((acc, { roomId }) => {
+      if (acc.includes(roomId)) {
+        return acc
+      } else {
+        return [...acc, roomId]
+      }
+    }, [])
+    handleClose()
+    onRoomSelect(ids)
   }
 
   const open = Boolean(anchorEl)
@@ -93,6 +113,9 @@ export const FreePlaceInfo = ({
               </ListItemButton>
             ))}
           </List>
+          <Button variant="contained" fullWidth onClick={handleSelectAllRooms}>
+            {t('View all')}
+          </Button>
         </Popover>
       )}
     </>

@@ -61,7 +61,7 @@ const bookingFiltersSlice = createSlice({
       }: PayloadAction<{
         startDate: string
         endDate: string
-        roomIdList: number
+        roomIdList: number | Array<number>
       }>
     ) {
       state.from = payload.startDate

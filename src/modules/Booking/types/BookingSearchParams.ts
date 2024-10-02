@@ -11,7 +11,7 @@ export interface BookingSearchParams extends PaginationParams {
   departmentId?: number
   hospitalId?: number
   labelId?: number
-  roomIdList?: number
+  roomIdList?: number | Array<number>
   sourceFunding?: SourceFundingEnum
   typeOfBooking?: TypeOfBookingEnum
   statusOfBooking?: StatusOfBookingEnum

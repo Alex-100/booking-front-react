@@ -171,8 +171,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     return total
   }, [dailyStatValues, hospitalsData, isSuccess])
 
-  const handleRoomSelect = (roomId: number) => {
-    console.log('D = ', roomId, d.date)
+  const handleRoomSelect = (roomId: number | Array<number>) => {
     const tmpDate = parseISO(d.date)
 
     const sDate = startOfDay(addDays(tmpDate, -14))
