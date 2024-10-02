@@ -23,6 +23,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   useGetAllHospitalsQuery,
+  useGetAllLabelsQuery,
   useGetDepartmentsByHospitalQuery,
 } from 'services'
 // import 'date-fns/locale/ru'
@@ -92,6 +93,17 @@ export const StatisticRoomsStatusPage = () => {
     }
   )
 
+  const { data: labels } = useGetAllLabelsQuery(null)
+  const [selectedLabel, setSelectedLabel] = useState<string>('')
+  const handleLabelSelect = (
+    event: SelectChangeEvent<typeof selectedLabel>
+  ) => {
+    const {
+      target: { value },
+    } = event
+    setSelectedLabel(value)
+  }
+
   // const availableHospitalDepartments = useMemo(
   //   () =>
   //     hospitalDepartments !== undefined
@@ -115,6 +127,9 @@ export const StatisticRoomsStatusPage = () => {
     to: format(endOfDay(selectedDate.toDate()), 'yyyy-MM-dd HH:mm'),
     ...(selectedHospital !== '' && { hospitalId: +selectedHospital }),
     ...(selectedDepartment !== '' && { departmentId: +selectedDepartment }),
+    ...(selectedLabel !== '' && { labelId: +selectedLabel }),
+    // labelsId: selectedLabels,
+    // la
     sortBy: 'department',
     sortDirection: 'ASC',
   })
@@ -145,7 +160,7 @@ export const StatisticRoomsStatusPage = () => {
               const { dob, enteringDate, leavingDate } = booking
               return {
                 fio,
-                birthDate: dob,
+                birthDate: dob || '',
                 enteringDate,
                 leavingDate,
                 place: place.number,
@@ -255,55 +270,6 @@ export const StatisticRoomsStatusPage = () => {
       ,</html>`
     )
 
-    /**
-     * 
-     *  {unpacketPlaces.map((v, idx) => (
-                <TableRow key={idx}>
-                  <TableCell>{v.hospital}</TableCell>
-                  <TableCell>{v.department}</TableCell>
-                  <TableCell>{v.place}</TableCell>
-                  <TableCell>
-                    <Typography color={v.color}>{v.placeLabel}</Typography>
-                  </TableCell>
-                  <TableCell>{v.fio}</TableCell>
-                  <TableCell>
-                    {v.birthDate !== '' && (
-                      <Typography>
-                        {format(
-                          parseISO(v.birthDate),
-                          i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
-                        )}
-                      </Typography>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {v.enteringDate !== '' && (
-                      <Typography>
-                        {format(
-                          parseISO(v.enteringDate),
-                          i18n.language === 'ru'
-                            ? 'dd.MM.yyyy HH:mm'
-                            : 'yyyy-MM-dd HH:mm'
-                        )}
-                      </Typography>
-                    )}
-
-                    
-                    </TableCell>
-                    <TableCell>
-                      {v.leavingDate !== '' && (
-                        <Typography>
-                          {format(
-                            parseISO(v.leavingDate),
-                            i18n.language === 'ru'
-                              ? 'dd.MM.yyyy HH:mm'
-                              : 'yyyy-MM-dd HH:mm'
-                          )}
-                        </Typography>
-                      )}
-                    </TableCell>
-                  </TableRow>
-     */
     printWnd?.print()
     // printWnd?.close()
   }
@@ -331,7 +297,7 @@ export const StatisticRoomsStatusPage = () => {
                 </LocalizationProvider>
               </FormControl>
             </Grid>
-            <Grid item lg={4} xs={12} md={4} sm={12}>
+            <Grid item lg={3} xs={12} md={3} sm={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth>
                 <InputLabel>{t('Hospital')}</InputLabel>
                 <Select
@@ -350,7 +316,7 @@ export const StatisticRoomsStatusPage = () => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item lg={4} xs={12} md={4} sm={12}>
+            <Grid item lg={3} xs={12} md={3} sm={12}>
               <FormControl
                 sx={{ m: 1, minWidth: 140 }}
                 fullWidth
@@ -371,6 +337,25 @@ export const StatisticRoomsStatusPage = () => {
                   {hospitalDepartments?.map((department) => (
                     <MenuItem key={department.id} value={department.id}>
                       {department.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item lg={2} md={2} xs={12} sm={12}>
+              <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth>
+                <InputLabel>{t('Label')}</InputLabel>
+                <Select
+                  label={t('Label')}
+                  value={selectedLabel}
+                  onChange={handleLabelSelect}
+                >
+                  <MenuItem value={''}>
+                    <em>{t('None')}</em>
+                  </MenuItem>
+                  {labels?.map((label) => (
+                    <MenuItem key={label.id} value={label.id}>
+                      {label.name}
                     </MenuItem>
                   ))}
                 </Select>
