@@ -67,6 +67,15 @@ const bookingFiltersSlice = createSlice({
       state.from = payload.startDate
       state.to = payload.endDate
       state.roomIdList = payload.roomIdList
+
+      state.departmentId = undefined
+      state.hospitalId = undefined
+      state.sourceFunding = undefined
+      state.typeOfBooking = undefined
+      state.statusOfBooking = undefined
+      state.labelId = undefined
+      state.test = undefined
+      state.pageNumber = 0
     },
     clearRoomFilter(state) {
       state.roomIdList = undefined
