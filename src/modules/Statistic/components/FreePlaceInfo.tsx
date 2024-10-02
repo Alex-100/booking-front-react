@@ -72,12 +72,13 @@ export const FreePlaceInfo = ({
             vertical: 'top',
             horizontal: 'center',
           }}
-          sx={{ maxHeight: 500 }}
         >
           <List
             sx={{
+              maxHeight: 400,
               minWidth: 280,
               maxWidth: 460,
+              overflowY: 'scroll',
               bgcolor: 'background.paper',
             }}
             component={'nav'}
@@ -89,7 +90,7 @@ export const FreePlaceInfo = ({
                 sx={{
                   paddingY: '1px',
                   paddingLeft: '8px',
-                  paddingRight: '24px',
+                  paddingRight: '8px',
                 }}
               >
                 <Box
