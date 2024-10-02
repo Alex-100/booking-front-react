@@ -1,5 +1,5 @@
 import { DailyStatModel } from 'modules/Dashboard/types'
-import { DepartmentModel, HospitalModel } from 'types'
+import { DepartmentModel, HospitalModel, LabelModel } from 'types'
 
 export interface DailyStatForHospitalModel {
   hospital: HospitalModel
@@ -10,6 +10,7 @@ export interface DailyStatForHospitalModel {
 export interface DailyStatForHospitalModelWithLabels {
   hospital: HospitalModel
   department: DepartmentModel
+  label: LabelModel
   totalDailyStat: DailyStatModel
   freeRooms: Array<{ room: number; place: number; roomId: number }>
   takenRooms: Array<{ room: number; place: number; roomId: number }>

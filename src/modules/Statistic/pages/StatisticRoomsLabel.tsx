@@ -322,6 +322,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                   <TableCell>{t('ID')}</TableCell>
                   <TableCell>{t('Hospital')}</TableCell>
                   <TableCell>{t('Department')}</TableCell>
+                  <TableCell>{t('Label')}</TableCell>
                   {dailyStatValuesFn().map(({ key, label }) => (
                     <TableCell key={key}>{label}</TableCell>
                   ))}
@@ -344,6 +345,9 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                       </TableCell>
                       <TableCell component="th" scope="row">
                         {row.department.name}
+                      </TableCell>
+                      <TableCell sx={{ color: row.label.color }}>
+                        {row.label.name}
                       </TableCell>
                       {dailyStatValues.map(({ key }) => (
                         <Fragment key={key}>
