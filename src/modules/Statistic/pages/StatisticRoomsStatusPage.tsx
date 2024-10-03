@@ -57,7 +57,8 @@ interface PlaceBookingInfo {
   birthDate: string
   enteringDate: string
   leavingDate: string
-  place: string
+  room: number
+  place: number
   placeLabel: string
   color?: string
   hospital: string
@@ -186,7 +187,8 @@ export const StatisticRoomsStatusPage = () => {
                 birthDate: dob || '',
                 enteringDate,
                 leavingDate,
-                place: `${v.roomNumber} ${place.number}`,
+                room: v.roomNumber,
+                place: place.number,
                 placeLabel: v.label.name,
                 color: v.label.color,
                 hospital: v.department.hospital.name,
@@ -200,7 +202,8 @@ export const StatisticRoomsStatusPage = () => {
               birthDate: '',
               enteringDate: '',
               leavingDate: '',
-              place: `${v.roomNumber} ${place.number}`,
+              room: v.roomNumber,
+              place: place.number,
               placeLabel: v.label.name,
               color: v.label.color,
               hospital: v.department.hospital.name,
@@ -232,6 +235,7 @@ export const StatisticRoomsStatusPage = () => {
         <th>${t('Hospital')}</th>
         <th>${t('Department')}</th>
         <th>${t('Room')}</th>
+        <th>${t('Place')}</th>
         <th>${t('Label')}</th>
         <th>${t('FIO')}</th>
         <th>${t('Birth Date')}</th>
@@ -250,6 +254,7 @@ export const StatisticRoomsStatusPage = () => {
       (v) => `<tr>
       <td>${v.hospital}</td>
       <td>${v.department}</td>
+      <td>${v.room}</td>
       <td>${v.place}</td>
       <td>${v.placeLabel}</td>
       <td>${v.fio}</td>
@@ -409,6 +414,7 @@ export const StatisticRoomsStatusPage = () => {
               <TableRow>
                 <TableCell>{t('Hospital')}</TableCell>
                 <TableCell>{t('Department')}</TableCell>
+                <TableCell>{t('Place')}</TableCell>
                 <TableCell>{t('Room')}</TableCell>
                 <TableCell>{t('Label')}</TableCell>
                 <TableCell>{t('FIO')}</TableCell>
@@ -422,6 +428,7 @@ export const StatisticRoomsStatusPage = () => {
                 <TableRow key={idx}>
                   <TableCell>{v.hospital}</TableCell>
                   <TableCell>{v.department}</TableCell>
+                  <TableCell>{v.room}</TableCell>
                   <TableCell>{v.place}</TableCell>
                   <TableCell>
                     <Typography color={v.color}>{v.placeLabel}</Typography>
