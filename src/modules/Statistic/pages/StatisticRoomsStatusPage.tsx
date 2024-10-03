@@ -36,6 +36,7 @@ import startOfDay from 'date-fns/startOfDay'
 import endOfDay from 'date-fns/endOfDay'
 import parseISO from 'date-fns/parseISO'
 import { Print } from '@mui/icons-material'
+import { useLocalStorage } from 'usehooks-ts'
 // import { useAppSelector } from 'store'
 
 // const ITEM_HEIGHT = 48
@@ -64,8 +65,14 @@ interface PlaceBookingInfo {
 export const StatisticRoomsStatusPage = () => {
   const { t, i18n } = useTranslation()
 
-  const [selectedHospital, setSelectedHospital] = useState('')
-  const [selectedDepartment, setSelectedDepartment] = useState('')
+  const [selectedHospital, setSelectedHospital] = useLocalStorage(
+    'rooms_status_hospital',
+    ''
+  )
+  const [selectedDepartment, setSelectedDepartment] = useLocalStorage(
+    'rooms_status_department',
+    ''
+  )
 
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs(new Date()))
 
@@ -93,7 +100,10 @@ export const StatisticRoomsStatusPage = () => {
   )
 
   const { data: labels } = useGetAllLabelsQuery(null)
-  const [selectedLabel, setSelectedLabel] = useState<string>('')
+  const [selectedLabel, setSelectedLabel] = useLocalStorage<string>(
+    'rooms_status_label',
+    ''
+  )
   const handleLabelSelect = (
     event: SelectChangeEvent<typeof selectedLabel>
   ) => {

@@ -19,7 +19,7 @@ import {
   Typography,
 } from '@mui/material'
 import { dailyStatValues, dailyStatValuesFn } from 'modules/Dashboard/constants'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   //   useGetAllDepartmentsQuery,
@@ -37,6 +37,7 @@ import format from 'date-fns/format'
 import startOfDay from 'date-fns/startOfDay'
 import endOfDay from 'date-fns/endOfDay'
 import { useHistory } from 'react-router-dom'
+import { useLocalStorage } from 'usehooks-ts'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -55,13 +56,19 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
   const dispatch = useAppDispatch()
   const d = useAppSelector((state) => state.dailyStatFilters)
 
-  const [selectedHospital, setSelectedHospital] = useState('')
-  const [selectedDepartments, setSelectedDepartments] = useState<Array<string>>(
-    []
+  const [selectedHospital, setSelectedHospital] = useLocalStorage(
+    'rooms_label_hospital_id',
+    ''
   )
+  const [selectedDepartments, setSelectedDepartments] = useLocalStorage<
+    Array<string>
+  >('rooms_label_departments', [])
 
   const { data: labels } = useGetAllLabelsQuery(null)
-  const [selectedLabels, setSelectedLabels] = useState<Array<string>>([])
+  const [selectedLabels, setSelectedLabels] = useLocalStorage<Array<string>>(
+    'rooms_label_labels',
+    []
+  )
   const handleLabeltSelect = (
     event: SelectChangeEvent<typeof selectedLabels>
   ) => {
@@ -71,7 +78,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     setSelectedLabels(typeof value === 'string' ? value.split(',') : value)
   }
 
-  const [period, setPeriod] = useState('24')
+  const [period, setPeriod] = useLocalStorage('rooms_label_period', '24')
 
   const { data: hospitals } = useGetAllHospitalsQuery(null)
   const handleHospitalSelect = (event: SelectChangeEvent) => {
