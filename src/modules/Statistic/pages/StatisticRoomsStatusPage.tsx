@@ -179,7 +179,7 @@ export const StatisticRoomsStatusPage = () => {
           if (place.bookings.length > 0) {
             const tmpBooking = place.bookings.map((booking) => {
               const fio = `${booking.surname || ''} ${booking.name || ''} ${
-                booking.surname || ''
+                booking.patronymicName || ''
               }`
               const { dob, enteringDate, leavingDate } = booking
               return {
