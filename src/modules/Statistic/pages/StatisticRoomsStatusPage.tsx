@@ -14,10 +14,9 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  TextField,
   Button,
 } from '@mui/material'
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { LocalizationProvider } from '@mui/x-date-pickers'
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -195,6 +194,7 @@ export const StatisticRoomsStatusPage = () => {
     }
   }, [data])
 
+  // eslint-disable-next-line
   const handleDateSelect = (date: Dayjs | null) => {
     if (date) {
       setSelectedDate(date)
@@ -289,11 +289,11 @@ export const StatisticRoomsStatusPage = () => {
                   dateAdapter={AdapterDayjs}
                   adapterLocale={i18n.language}
                 >
-                  <DatePicker
+                  {/* <DatePicker
                     value={selectedDate}
                     onChange={handleDateSelect}
                     renderInput={(params) => <TextField {...params} />}
-                  />
+                  /> */}
                 </LocalizationProvider>
               </FormControl>
             </Grid>
