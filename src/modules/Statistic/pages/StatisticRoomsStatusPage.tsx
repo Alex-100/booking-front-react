@@ -57,7 +57,7 @@ interface PlaceBookingInfo {
   birthDate: string
   enteringDate: string
   leavingDate: string
-  place: number
+  place: string
   placeLabel: string
   color?: string
   hospital: string
@@ -177,14 +177,16 @@ export const StatisticRoomsStatusPage = () => {
         v.places.forEach((place) => {
           if (place.bookings.length > 0) {
             const tmpBooking = place.bookings.map((booking) => {
-              const fio = `${booking.surname} ${booking.name} ${booking.surname}`
+              const fio = `${booking.surname || ''} ${booking.name || ''} ${
+                booking.surname || ''
+              }`
               const { dob, enteringDate, leavingDate } = booking
               return {
                 fio,
                 birthDate: dob || '',
                 enteringDate,
                 leavingDate,
-                place: v.roomNumber,
+                place: `${v.roomNumber} ${place.number}`,
                 placeLabel: v.label.name,
                 color: v.label.color,
                 hospital: v.department.hospital.name,
@@ -198,7 +200,7 @@ export const StatisticRoomsStatusPage = () => {
               birthDate: '',
               enteringDate: '',
               leavingDate: '',
-              place: place.number,
+              place: `${v.roomNumber} ${place.number}`,
               placeLabel: v.label.name,
               color: v.label.color,
               hospital: v.department.hospital.name,
