@@ -138,7 +138,7 @@ export const StatisticRoomsStatusPage = () => {
   const [pageSize, setPageSize] = useLocalStorage('rooms_status_page_size', 10)
   const handleSetPageSize = (event: SelectChangeEvent) => {
     setPageSize(parseInt(event.target.value))
-    setPage(0)
+    setPage(1)
   }
 
   const { data } = useSearchQuery({
