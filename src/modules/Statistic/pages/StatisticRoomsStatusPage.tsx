@@ -15,6 +15,8 @@ import {
   TableCell,
   TableBody,
   Button,
+  Stack,
+  useMediaQuery,
 } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
@@ -62,8 +64,11 @@ interface PlaceBookingInfo {
   department: string
 }
 
+const PAGE_SIZES = [10, 30, 50, 100, 150, 200]
+
 export const StatisticRoomsStatusPage = () => {
   const { t, i18n } = useTranslation()
+  const matchesSm = useMediaQuery((theme: any) => theme.breakpoints.up('sm'))
 
   const [selectedHospital, setSelectedHospital] = useLocalStorage(
     'rooms_status_hospital',
@@ -130,6 +135,12 @@ export const StatisticRoomsStatusPage = () => {
     setPage(newPage)
   }
 
+  const [pageSize, setPageSize] = useLocalStorage('rooms_status_page_size', 10)
+  const handleSetPageSize = (event: SelectChangeEvent) => {
+    setPageSize(parseInt(event.target.value))
+    setPage(0)
+  }
+
   const { data } = useSearchQuery({
     pageNumber: page - 1,
     from: format(startOfDay(selectedDate.toDate()), 'yyyy-MM-dd HH:mm'),
@@ -139,6 +150,7 @@ export const StatisticRoomsStatusPage = () => {
     ...(selectedLabel !== '' && { labelId: +selectedLabel }),
     // labelsId: selectedLabels,
     // la
+    pageSize: pageSize,
     sortBy: 'department',
     sortDirection: 'ASC',
   })
@@ -172,7 +184,7 @@ export const StatisticRoomsStatusPage = () => {
                 birthDate: dob || '',
                 enteringDate,
                 leavingDate,
-                place: place.number,
+                place: v.roomNumber,
                 placeLabel: v.label.name,
                 color: v.label.color,
                 hospital: v.department.hospital.name,
@@ -456,11 +468,38 @@ export const StatisticRoomsStatusPage = () => {
         </Toolbar>
 
         {data && (
-          <Pagination
-            count={data.totalPages}
-            onChange={handleChangePage}
-            page={page}
-          />
+          <Toolbar sx={{ pl: { sm: 1 }, pt: 2, pb: 2 }} component={Paper}>
+            <Stack
+              direction={matchesSm ? 'row' : 'column'}
+              spacing={matchesSm ? 3 : 2}
+              alignItems="center"
+              width="100%"
+            >
+              <Pagination
+                count={data.totalPages}
+                onChange={handleChangePage}
+                page={page}
+              />
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="rooms-list-container-page-size-select">
+                  {t('Page size')}
+                </InputLabel>
+                <Select
+                  labelId="rooms-list-container-page-size-select"
+                  id="rooms-list-container-page-size-select"
+                  value={`${pageSize}`}
+                  label={t('Page size')}
+                  onChange={handleSetPageSize}
+                >
+                  {PAGE_SIZES.map((v) => (
+                    <MenuItem key={v} value={v}>
+                      {v}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Stack>
+          </Toolbar>
         )}
       </Grid>
     </Grid>
