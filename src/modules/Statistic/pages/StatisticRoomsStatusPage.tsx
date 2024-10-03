@@ -414,8 +414,8 @@ export const StatisticRoomsStatusPage = () => {
               <TableRow>
                 <TableCell>{t('Hospital')}</TableCell>
                 <TableCell>{t('Department')}</TableCell>
-                <TableCell>{t('Place')}</TableCell>
                 <TableCell>{t('Room')}</TableCell>
+                <TableCell>{t('Place')}</TableCell>
                 <TableCell>{t('Label')}</TableCell>
                 <TableCell>{t('FIO')}</TableCell>
                 <TableCell>{t('Birth Date')}</TableCell>
