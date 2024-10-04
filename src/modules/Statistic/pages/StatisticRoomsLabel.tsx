@@ -19,7 +19,7 @@ import {
   Typography,
 } from '@mui/material'
 import { dailyStatValues, dailyStatValuesFn } from 'modules/Dashboard/constants'
-import { Fragment, useEffect, useMemo } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   //   useGetAllDepartmentsQuery,
@@ -38,6 +38,7 @@ import startOfDay from 'date-fns/startOfDay'
 import endOfDay from 'date-fns/endOfDay'
 import { useHistory } from 'react-router-dom'
 import { useLocalStorage } from 'usehooks-ts'
+import { DepartmentModel } from 'types'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -109,20 +110,57 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     [hospitalDepartments]
   )
 
+  const [allDepartments, setAllDepartments] = useState<Array<string>>([])
+  useEffect(() => {
+    const loadDeps = async (ids: Array<number>) => {
+      const accessToken = JSON.parse(localStorage.getItem('auth') || '{}')
+        .access_token
+
+      const data = await Promise.all(
+        ids.map(async (id) => {
+          const res = await fetch(`/api/department?hospitalId=${id}`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          })
+          const tmp: DepartmentModel[] = await res.json()
+          return tmp
+        })
+      )
+
+      const departmentsIds = data
+        .flatMap((v) => v)
+        .map((v) => (v.id as unknown) as string)
+
+      console.log(
+        'GET ALL DEPS',
+        data.flatMap((v) => v),
+        departmentsIds
+      )
+      setAllDepartments(departmentsIds)
+    }
+
+    if (hospitals) {
+      const hospitalsIds = hospitals.map((v) => v.id)
+      loadDeps(hospitalsIds)
+      console.log('hospitals', hospitalsIds)
+    }
+  }, [hospitals])
+
   const { data, isSuccess } = useGetDailyStatForHospitalByLabelQuery(
     {
       date: d.date,
       departmentsId:
-        selectedDepartments.length > 0
+        selectedHospital === ''
+          ? allDepartments
+          : selectedDepartments.length > 0
           ? selectedDepartments
-          : availableHospitalDepartments.length > 0
-          ? availableHospitalDepartments
-          : [],
+          : availableHospitalDepartments,
       labelsId: selectedLabels,
       hoursBetweenEnteringAndLeaving: +period,
     },
     {
-      skip: selectedDepartments.length === 0 || selectedLabels.length === 0,
+      skip:
+        // (selectedDepartments.length === 0 && allDepartments.length === 0) ||
+        selectedLabels.length === 0,
     }
     // { refetchOnMountOrArgChange: true }
   )
@@ -192,6 +230,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     )
     navigate.push('/booking')
   }
+
 
   return (
     <>
@@ -336,7 +375,9 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {selectedDepartments.length > 0 &&
+                {(selectedDepartments.length > 0 ||
+                  (selectedDepartments.length === 0 &&
+                    allDepartments.length > 0)) &&
                   selectedLabels.length > 0 &&
                   hospitalsData &&
                   hospitalsData.map((row, idx) => (
@@ -378,7 +419,7 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell
-                    colSpan={3}
+                    colSpan={4}
                     sx={{ fontWeight: 700, textAlign: 'right' }}
                   >
                     {t('Total')}
