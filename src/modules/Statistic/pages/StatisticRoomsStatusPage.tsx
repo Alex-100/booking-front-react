@@ -17,6 +17,7 @@ import {
   Button,
   Stack,
   useMediaQuery,
+  TextField,
 } from '@mui/material'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
@@ -39,6 +40,7 @@ import endOfDay from 'date-fns/endOfDay'
 import parseISO from 'date-fns/parseISO'
 import { Print } from '@mui/icons-material'
 import { useLocalStorage } from 'usehooks-ts'
+import { DatePicker } from '@mui/x-date-pickers'
 // import { useAppSelector } from 'store'
 
 // const ITEM_HEIGHT = 48
@@ -221,7 +223,6 @@ export const StatisticRoomsStatusPage = () => {
     }
   }, [data])
 
-  // eslint-disable-next-line
   const handleDateSelect = (date: Dayjs | null) => {
     if (date) {
       setSelectedDate(date)
@@ -318,11 +319,18 @@ export const StatisticRoomsStatusPage = () => {
                   dateAdapter={AdapterDayjs}
                   adapterLocale={i18n.language}
                 >
-                  {/* <DatePicker
+                  <DatePicker
                     value={selectedDate}
                     onChange={handleDateSelect}
-                    renderInput={(params) => <TextField {...params} />}
-                  /> */}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        // InputProps={{
+                        //   readOnly: true,
+                        // }}
+                      />
+                    )}
+                  />
                 </LocalizationProvider>
               </FormControl>
             </Grid>
