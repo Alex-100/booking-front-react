@@ -231,7 +231,6 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     navigate.push('/booking')
   }
 
-
   return (
     <>
       <Grid container>

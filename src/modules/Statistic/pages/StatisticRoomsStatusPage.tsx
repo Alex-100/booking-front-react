@@ -17,9 +17,8 @@ import {
   Button,
   Stack,
   useMediaQuery,
-  TextField,
 } from '@mui/material'
-import { LocalizationProvider } from '@mui/x-date-pickers'
+
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -28,19 +27,15 @@ import {
   useGetAllLabelsQuery,
   useGetDepartmentsByHospitalQuery,
 } from 'services'
-// import 'date-fns/locale/ru'
-// import 'date-fns/locale/en-US'
-import 'dayjs/locale/ru'
-import 'dayjs/locale/en'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import dayjs, { Dayjs } from 'dayjs'
+
 import format from 'date-fns/format'
 import startOfDay from 'date-fns/startOfDay'
 import endOfDay from 'date-fns/endOfDay'
 import parseISO from 'date-fns/parseISO'
 import { Print } from '@mui/icons-material'
 import { useLocalStorage } from 'usehooks-ts'
-import { DatePicker } from '@mui/x-date-pickers'
+import { DatePicker } from '../components/date-picker'
+// import { DatePicker } from '@mui/x-date-pickers'
 // import { useAppSelector } from 'store'
 
 // const ITEM_HEIGHT = 48
@@ -82,7 +77,7 @@ export const StatisticRoomsStatusPage = () => {
     ''
   )
 
-  const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs(new Date()))
+  const [selectedDate, setSelectedDate] = useState(new Date())
 
   const { data: hospitals } = useGetAllHospitalsQuery(null)
   const handleHospitalSelect = (event: SelectChangeEvent) => {
@@ -146,8 +141,8 @@ export const StatisticRoomsStatusPage = () => {
 
   const { data } = useSearchQuery({
     pageNumber: page - 1,
-    from: format(startOfDay(selectedDate.toDate()), 'yyyy-MM-dd HH:mm'),
-    to: format(endOfDay(selectedDate.toDate()), 'yyyy-MM-dd HH:mm'),
+    from: format(startOfDay(selectedDate), 'yyyy-MM-dd HH:mm'),
+    to: format(endOfDay(selectedDate), 'yyyy-MM-dd HH:mm'),
     ...(selectedHospital !== '' && { hospitalId: +selectedHospital }),
     ...(selectedDepartment !== '' && { departmentId: +selectedDepartment }),
     ...(selectedLabel !== '' && { labelId: +selectedLabel }),
@@ -157,17 +152,6 @@ export const StatisticRoomsStatusPage = () => {
     sortBy: 'department',
     sortDirection: 'ASC',
   })
-
-  useEffect(() => {
-    console.log(
-      'DATE',
-      selectedDate.toDate(),
-      startOfDay(selectedDate.toDate()),
-      endOfDay(selectedDate.toDate()),
-      format(startOfDay(selectedDate.toDate()), 'yyyy-MM-dd HH:mm'),
-      format(endOfDay(selectedDate.toDate()), 'yyyy-MM-dd HH:mm')
-    )
-  }, [selectedDate])
 
   useEffect(() => {
     console.log('selectedHospital', selectedHospital)
@@ -223,10 +207,9 @@ export const StatisticRoomsStatusPage = () => {
     }
   }, [data])
 
-  const handleDateSelect = (date: Dayjs | null) => {
-    if (date) {
-      setSelectedDate(date)
-    }
+  // eslint-disable-next-line
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date)
   }
 
   const handlePrint = () => {
@@ -290,6 +273,10 @@ export const StatisticRoomsStatusPage = () => {
       `<html>
         <head>${style}</head>
         <body>
+          <div>${t('Date')}: ${format(
+        selectedDate,
+        i18n.language === 'ru' ? 'dd.MM.yyyy' : 'yyyy-MM-dd'
+      )}</div>
           <table style="width: 100%">
             ${th}
             <tbody>
@@ -314,7 +301,11 @@ export const StatisticRoomsStatusPage = () => {
         <Toolbar sx={{ sm: 6, py: 1, my: 1, width: '100%' }} component={Paper}>
           <Grid container spacing={2}>
             <Grid item lg={2} md={2} xs={12} sm={12}>
-              <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth>
+              <DatePicker
+                value={selectedDate}
+                onDateSelect={handleDateSelect}
+              />
+              {/* <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth>
                 <LocalizationProvider
                   dateAdapter={AdapterDayjs}
                   adapterLocale={i18n.language}
@@ -332,7 +323,7 @@ export const StatisticRoomsStatusPage = () => {
                     )}
                   />
                 </LocalizationProvider>
-              </FormControl>
+              </FormControl> */}
             </Grid>
             <Grid item lg={3} xs={12} md={3} sm={12}>
               <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth>
