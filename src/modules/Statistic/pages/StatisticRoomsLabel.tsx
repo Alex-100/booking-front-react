@@ -39,6 +39,7 @@ import endOfDay from 'date-fns/endOfDay'
 import { useHistory } from 'react-router-dom'
 import { useLocalStorage } from 'usehooks-ts'
 import { DepartmentModel } from 'types'
+import addWeeks from 'date-fns/addWeeks'
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -219,8 +220,8 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
   const handleRoomSelect = (roomId: number | Array<number>) => {
     const tmpDate = parseISO(d.date)
 
-    const sDate = startOfDay(addDays(tmpDate, -14))
-    const eDate = endOfDay(addDays(tmpDate, 14))
+    const sDate = startOfDay(addDays(tmpDate, -3))
+    const eDate = endOfDay(addWeeks(tmpDate, 3))
     dispatch(
       filterByRoom({
         startDate: format(sDate, 'yyyy-MM-dd HH:mm'),
