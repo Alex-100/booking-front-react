@@ -20,7 +20,7 @@ import {
 } from '@mui/material'
 
 import { useSearchQuery } from 'modules/Booking/state/bookingService'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   useGetAllHospitalsQuery,
@@ -124,8 +124,15 @@ export const StatisticRoomsStatusPage = () => {
   //   [hospitalDepartments]
   // )
 
+  const firstLoad = useRef(true)
   useEffect(() => {
-    setSelectedDepartment('')
+    if (
+      firstLoad.current &&
+      localStorage.getItem('rooms_status_department') === null
+    ) {
+      setSelectedDepartment('')
+    }
+    firstLoad.current = false
   }, [selectedHospital])
 
   const [page, setPage] = useState(1)

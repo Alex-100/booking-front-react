@@ -19,7 +19,7 @@ import {
   Typography,
 } from '@mui/material'
 import { dailyStatValues, dailyStatValuesFn } from 'modules/Dashboard/constants'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   //   useGetAllDepartmentsQuery,
@@ -62,6 +62,11 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     'rooms_label_hospital_id',
     ''
   )
+
+  useEffect(() => {
+    console.log('SELECTED_HOSPITAL', selectedHospital)
+  }, [selectedHospital])
+
   const [selectedDepartments, setSelectedDepartments] = useLocalStorage<
     Array<string>
   >('rooms_label_departments', [])
@@ -110,6 +115,14 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
         : [],
     [hospitalDepartments]
   )
+
+  useEffect(() => {
+    console.log(
+      'SELECTED_HOSPITAL WITH DEP',
+      selectedHospital,
+      hospitalDepartments
+    )
+  }, [hospitalDepartments, selectedHospital])
 
   const [allDepartments, setAllDepartments] = useState<Array<string>>([])
   useEffect(() => {
@@ -166,20 +179,27 @@ export const StatisticRoomsLabelPage = (): JSX.Element => {
     // { refetchOnMountOrArgChange: true }
   )
 
+  const firstLoadRef = useRef(true)
   useEffect(() => {
     if (
-      hospitalDepartments &&
-      hospitalDepartments.length > 0 &&
-      selectedHospital !== ''
+      firstLoadRef.current &&
+      localStorage.getItem('rooms_label_departments') === null
     ) {
-      setSelectedDepartments(
-        hospitalDepartments.map(
-          (department) => (department.id as unknown) as string
+      if (
+        hospitalDepartments &&
+        hospitalDepartments.length > 0 &&
+        selectedHospital !== ''
+      ) {
+        setSelectedDepartments(
+          hospitalDepartments.map(
+            (department) => (department.id as unknown) as string
+          )
         )
-      )
-    } else {
-      setSelectedDepartments([])
+      } else {
+        setSelectedDepartments([])
+      }
     }
+    firstLoadRef.current = false
   }, [hospitalDepartments, selectedHospital])
 
   useEffect(() => {
