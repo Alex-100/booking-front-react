@@ -14,6 +14,7 @@ import './i18n'
 import 'moment/locale/ru'
 import 'moment/locale/en-gb'
 import { Box, CircularProgress } from '@mui/material'
+import { ErrorBoundary } from 'components/error/error-boundary'
 
 const App = React.lazy(() => import('./App'))
 
@@ -37,13 +38,16 @@ const LoadingSplash = () => (
 
 ReactDOM.render(
   // @ts-ignore
-  <Provider store={store}>
+  <ErrorBoundary>
     {/* @ts-ignore */}
-    <SnackbarProvider maxSnack={3}>
-      <Suspense fallback={<LoadingSplash />}>
-        <App />
-      </Suspense>
-    </SnackbarProvider>
-  </Provider>,
+    <Provider store={store}>
+      {/* @ts-ignore */}
+      <SnackbarProvider maxSnack={3}>
+        <Suspense fallback={<LoadingSplash />}>
+          <App />
+        </Suspense>
+      </SnackbarProvider>
+    </Provider>
+  </ErrorBoundary>,
   document.getElementById('root')
 )

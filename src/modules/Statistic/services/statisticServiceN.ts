@@ -1,7 +1,13 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { getURLSearchParams } from 'utils'
-import { DailyStatFilters } from '../types/DailyStatFilters'
-import { DailyStatForHospitalModel } from '../types/DailyStatForHospitalModel'
+import {
+  DailyStatFilters,
+  DailyStatFiltersWithLabels,
+} from '../types/DailyStatFilters'
+import {
+  DailyStatForHospitalModel,
+  DailyStatForHospitalModelWithLabels,
+} from '../types/DailyStatForHospitalModel'
 import baseQuery from '../../../utils/baseQuery'
 import { PlaceStatInfo } from '../types/PlaceStatInfo'
 import { PaidStatInfo } from '../types/PaidStatInfo'
@@ -26,6 +32,28 @@ export const statisticServiceN = createApi({
               departmentsId: params.departmentsId,
             })}`,
     }),
+    getDailyStatForHospitalByLabel: builder.query<
+      | DailyStatForHospitalModelWithLabels[]
+      | DailyStatForHospitalModelWithLabels,
+      DailyStatFiltersWithLabels
+    >({
+      query: (params) => {
+        const p = new URLSearchParams()
+        p.append('date', params.date)
+        params.departmentsId.forEach((v) => {
+          p.append('departmentsId', v)
+        })
+        params.labelsId.forEach((v) => {
+          p.append('labelsId', v)
+        })
+        p.append(
+          'hoursBetweenEnteringAndLeaving',
+          (params.hoursBetweenEnteringAndLeaving as unknown) as string
+        )
+        console.log('params', params, p)
+        return `stat/daily/hospital/departments/labels?${p.toString()}`
+      },
+    }),
     getStatForPlaces: builder.query<PlaceStatInfo[], null>({
       query: () => 'stat/places',
     }),
@@ -38,6 +66,7 @@ export const statisticServiceN = createApi({
 
 export const {
   useGetDailyStatForHospitalNQuery,
+  useGetDailyStatForHospitalByLabelQuery,
   useGetStatForPlacesQuery,
   useGetPaidStatInfoQuery,
 } = statisticServiceN

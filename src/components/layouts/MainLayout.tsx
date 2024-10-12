@@ -46,7 +46,7 @@ import { useTranslation } from 'react-i18next'
 
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { ExternalLink } from 'components/external_link'
+// import { ExternalLink } from 'components/external_link'
 
 const drawerWidth: number = 240
 
@@ -130,6 +130,22 @@ const StatisticSubMemu = () => {
           <ListItemButton selected={location.pathname === '/statistic/rooms'}>
             <ListItemIcon />
             <ListItemText primary={t('statistic.rooms')} />
+          </ListItemButton>
+        </Link>
+        <Link to="/statistic/rooms_status">
+          <ListItemButton
+            selected={location.pathname === '/statistic/rooms_status'}
+          >
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.rooms_status')} />
+          </ListItemButton>
+        </Link>
+        <Link to="/statistic/rooms_label">
+          <ListItemButton
+            selected={location.pathname === '/statistic/rooms_label'}
+          >
+            <ListItemIcon />
+            <ListItemText primary={t('statistic.rooms_label')} />
           </ListItemButton>
         </Link>
         <Link to="/statistic/users">
@@ -230,7 +246,14 @@ const Dashboard: React.FC = ({ children }) => {
           open={open}
           variant={widthMax700 ? undefined : 'permanent'}
           onClose={toggleDrawer}
-          sx={{ overflowX: 'hidden', overflowY: 'auto', maxHeight: '100vh' }}
+          PaperProps={{
+            sx: { minWidth: '240px', width: '240px', maxWidth: '240px' },
+          }}
+          sx={{
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            maxHeight: '100vh',
+          }}
         >
           <Toolbar>
             <IconButton
@@ -247,9 +270,9 @@ const Dashboard: React.FC = ({ children }) => {
               <ApplicationHeader />
             </Box>
           </Toolbar>
-          <Box sx={{ p: 1, justifyItems: 'center' }}>
+          {/* <Box sx={{ p: 1, justifyItems: 'center' }}>
             <ExternalLink />
-          </Box>
+          </Box> */}
 
           <Box sx={{ m: 2 }}>
             <Stack
@@ -321,6 +344,8 @@ const Dashboard: React.FC = ({ children }) => {
                 location.pathname === '/statistic/department' ||
                 location.pathname === '/statistic/paid' ||
                 location.pathname === '/statistic/rooms' ||
+                location.pathname === '/statistic/rooms_status' ||
+                location.pathname === '/statistic/rooms_label' ||
                 location.pathname === '/statistic/users' ||
                 location.pathname === '/stat/bookingOfUsers/date/brief'
               }

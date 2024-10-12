@@ -28,6 +28,14 @@ interface Props extends FormProps {
   enteringDate?: string
 }
 
+const availableFoundation = [
+  'PUBLIC_INSURANCE',
+  'PRIVATE_INSURANCE',
+  'PAID_BY_COMPANY',
+  'PAID_BY_CITIZENS',
+  'OTHER',
+]
+
 const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
   form: 'groupBooking',
 })((props) => {
@@ -93,6 +101,7 @@ const GroupBookingForm = reduxForm<BookingCreateForm, Props>({
                   <MenuItem
                     value={k}
                     key={k}
+                    disabled={!availableFoundation.includes(k)}
                     selected={k === SourceFundingEnum.OTHER}
                   >
                     {l}

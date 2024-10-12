@@ -8,6 +8,7 @@ import {
 export const sourceFundingOptionsFn = () => {
   const { t } = useTranslation()
   const data: [SourceFundingEnum, string][] = [
+    [SourceFundingEnum.PUBLIC_INSURANCE, t('PUBLIC_INSURANCE')],
     [SourceFundingEnum.PRIVATE_INSURANCE, t('PRIVATE_INSURANCE')],
     [SourceFundingEnum.PAID_BY_CITIZENS, t('PAID_BY_CITIZENS')],
     [SourceFundingEnum.PAID_BY_COMPANY, t('PAID_BY_COMPANY')],

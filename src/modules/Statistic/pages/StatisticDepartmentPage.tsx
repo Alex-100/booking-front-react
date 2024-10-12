@@ -75,7 +75,7 @@ export const StatisticDepartmentPage = (): JSX.Element => {
     [hospitalDepartments]
   )
 
-  const { data } = useGetDailyStatForHospitalNQuery({
+  const { data, isSuccess } = useGetDailyStatForHospitalNQuery({
     date: d.date,
     hospitalId: selectedHospital,
     departmentsId:
@@ -109,6 +109,44 @@ export const StatisticDepartmentPage = (): JSX.Element => {
       return undefined
     }
   }, [data])
+
+  // useEffect(() => {
+  //   const total: {
+  //     [x: string]: number
+  //   } = {}
+  //   dailyStatValues.forEach(({ key }) => (total[key] = 0))
+  //   console.log('TOTAL DATA H', hospitalsData, data)
+  //   if (hospitalsData) {
+  //     dailyStatValues.map(({ key }) => {
+  //       const dV = hospitalsData.reduce(
+  //         (acc, curr) => acc + curr.dailyStat[key],
+  //         0
+  //       )
+  //       total[key] = dV
+  //     })
+
+  //     console.log('TOTAL DATA', total)
+  //   }
+  // }, [hospitalsData, dailyStatValues, data])
+
+  const totalInfo = useMemo(() => {
+    const total: {
+      [x: string]: number
+    } = {}
+    dailyStatValues.forEach(({ key }) => (total[key] = 0))
+    if (hospitalsData && isSuccess) {
+      dailyStatValues.map(({ key }) => {
+        const dV = hospitalsData.reduce(
+          (acc, curr) => acc + curr.dailyStat[key],
+          0
+        )
+        total[key] = dV
+      })
+
+      console.log('TOTAL DATA', total)
+    }
+    return total
+  }, [dailyStatValues, hospitalsData, isSuccess])
 
   return (
     <>
@@ -220,6 +258,19 @@ export const StatisticDepartmentPage = (): JSX.Element => {
                       ))}
                     </TableRow>
                   ))}
+                <TableRow
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell
+                    colSpan={3}
+                    sx={{ fontWeight: 700, textAlign: 'right' }}
+                  >
+                    {t('Total')}
+                  </TableCell>
+                  {dailyStatValues.map(({ key }) => (
+                    <TableCell key={key}>{totalInfo[key]}</TableCell>
+                  ))}
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

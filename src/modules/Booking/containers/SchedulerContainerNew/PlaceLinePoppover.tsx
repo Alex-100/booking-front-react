@@ -203,6 +203,14 @@ export const PlaceLinePoppover = ({
               )}
             </Typography>
           </Stack>
+
+          <Stack direction="row" spacing={1}>
+            <Typography variant="subtitle2" color="text.secondary">
+              {t('Place')}:{' '}
+            </Typography>
+            <Typography>{place.number}</Typography>
+          </Stack>
+
           {(booking.individualId ||
             booking.gender ||
             booking.dob ||
@@ -247,6 +255,27 @@ export const PlaceLinePoppover = ({
                     <Typography>{booking.individualId}</Typography>
                   </Stack>
                 )}
+
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    {t('Email')}:{' '}
+                  </Typography>
+                  <Typography>{booking.email}</Typography>
+                </Stack>
+
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    {t('Phone')}:{' '}
+                  </Typography>
+                  <Typography>{booking.phoneNumber}</Typography>
+                </Stack>
+
+                <Stack direction="row" spacing={1}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    {t('Note')}:{' '}
+                  </Typography>
+                  <Typography>{booking.note}</Typography>
+                </Stack>
 
                 {booking.gender !== null && (
                   <Stack direction="row" spacing={1}>

@@ -46,6 +46,7 @@ export const SchedulerContainedNew = ({
   const widthMax700 = useMediaQuery('(max-width:700px)')
 
   const bookingFilters = useAppSelector((state) => state.bookingFilters)
+  // bookingFilters.
   const { data, status } = useSearchQuery(bookingFilters)
   const { i18n } = useTranslation()
   const locale = useMemo(() => getDateLocale(i18n.language), [i18n.language])
