@@ -15,7 +15,7 @@ export const useAuth = () => {
       check(...roles: string[]) {
         return !!roles
       },
-      logout() {},
+      logout() { },
     }
   }
 
@@ -35,6 +35,9 @@ export const useAuth = () => {
   const logout = () => {
     localStorage.removeItem('auth')
     location.href = '/signin'
+    document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   }
 
   return {

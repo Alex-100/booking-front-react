@@ -30,7 +30,11 @@ export default function SignInPage() {
       .post(`/login`, values)
       .then((response) => {
         localStorage.setItem('auth', JSON.stringify(response.data))
+        const jwtToken = response.data;
         history.push('/statistic/common')
+        document.cookie = `accessToken=${jwtToken.access_token}`
+        document.cookie = `refreshToken=${jwtToken.refresh_token}`
+        document.cookie = `username=${values.username}`
         setLoading(false)
       })
       .catch(() => {
