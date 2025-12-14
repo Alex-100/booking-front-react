@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
    container_name: "booking-react-front"
-   image: booking-react
+   image: web:latest
    volumes:
      - ./templates/link_config:/usr/share/nginx/html/link_conf_template
      - ./templates/nginx_config.template.conf:/tmp/nginx_config.template.conf
