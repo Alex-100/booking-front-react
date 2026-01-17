@@ -6,22 +6,28 @@ import { DATE_FORMAT_TEMPLATE } from '../../../constants'
 import dayjs from 'dayjs'
 import * as jose from 'jose'
 
-interface BookingFiltersState extends BookingSearchParams {}
+interface BookingFiltersState extends BookingSearchParams { }
 
 const initialState: BookingFiltersState = {
   pageNumber: 0,
   pageSize: 10,
   from: dayjs().startOf('day').format(DATE_FORMAT_TEMPLATE),
   to: dayjs().startOf('day').add(30, 'days').format(DATE_FORMAT_TEMPLATE),
-  sortBy: 'department',
+  sortBy: '',
   sortDirection: 'ASC',
 }
 
 export const loadInitialStateFilter = () => {
-  const storedToken = JSON.parse(localStorage.getItem('auth') || '{}')
-    .access_token
+  const cookies = document.cookie;
+  const accessToken = cookies.match(/accessToken=([^;]+)/);
 
-  const jwt = jose.decodeJwt(storedToken)
+  var token = '{}';
+
+  if (accessToken) {
+    token = accessToken[1];
+  }
+
+  const jwt = jose.decodeJwt(token)
 
   const username = jwt.sub
 
@@ -72,10 +78,16 @@ const bookingFiltersSlice = createSlice({
       state.test = action.payload.test
       state.pageNumber = 0
 
-      const storedToken = JSON.parse(localStorage.getItem('auth') || '{}')
-        .access_token
+      const cookies = document.cookie;
+      const accessToken = cookies.match(/accessToken=([^;]+)/);
 
-      const jwt = jose.decodeJwt(storedToken)
+      var token = '{}';
+
+      if (accessToken) {
+        token = accessToken[1];
+      }
+
+      const jwt = jose.decodeJwt(token)
       const username = jwt.sub
       if (username) {
         localStorage.setItem(
@@ -113,10 +125,16 @@ const bookingFiltersSlice = createSlice({
       state[action.payload] = undefined
       state.pageNumber = 0
 
-      const storedToken = JSON.parse(localStorage.getItem('auth') || '{}')
-        .access_token
+      const cookies = document.cookie;
+      const accessToken = cookies.match(/accessToken=([^;]+)/);
 
-      const jwt = jose.decodeJwt(storedToken)
+      var token = '{}';
+
+      if (accessToken) {
+        token = accessToken[1];
+      }
+
+      const jwt = jose.decodeJwt(token)
       const username = jwt.sub
       if (username) {
         localStorage.setItem(

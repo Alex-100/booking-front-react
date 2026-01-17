@@ -23,6 +23,10 @@ import { StatisticCommonPage } from 'modules/Statistic/pages/StatisticCommonPage
 import { StatisticUsersBriefPage } from 'modules/Statistic/pages/StatisticUsersBriefPage'
 
 const App: React.FC = () => {
+  const cookies = document.cookie;
+  const accessToken = cookies.match(/accessToken=([^;]+)/);
+  const refreshToken = cookies.match(/refreshToken=([^;]+)/);
+  const auth = refreshToken !== null && accessToken !== null;
   return (
     // @ts-ignore*
     <BrowserRouter>
@@ -30,7 +34,7 @@ const App: React.FC = () => {
         <Route path="/signin" component={SignInPage} exact />
         <MainLayout>
           <Route path="/" exact>
-            {localStorage.getItem('auth') ? (
+            {auth ? (
               <Redirect to="/statistic/common" />
             ) : (
               <Redirect to="/signin" />

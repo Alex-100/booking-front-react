@@ -6,7 +6,12 @@ interface AuthUser {
 }
 
 export const useAuth = () => {
-  if (!localStorage.getItem('auth')) {
+  const cookies = document.cookie;
+  const accessToken = cookies.match(/accessToken=([^;]+)/);
+  const refreshToken = cookies.match(/refreshToken=([^;]+)/);
+  const auth = refreshToken !== null && accessToken !== null;
+
+  if (!auth) {
     return {
       user: {
         username: '',
@@ -19,8 +24,12 @@ export const useAuth = () => {
     }
   }
 
+  var aToken = '{}';
+  if (accessToken) {
+    aToken = accessToken[1];
+  }
   const jwt = jose.decodeJwt(
-    JSON.parse(localStorage.getItem('auth') || '{}').access_token
+    aToken
   )
 
   const user: AuthUser = {
@@ -33,7 +42,6 @@ export const useAuth = () => {
   }
 
   const logout = () => {
-    localStorage.removeItem('auth')
     location.href = '/signin'
     document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

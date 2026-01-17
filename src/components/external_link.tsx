@@ -28,29 +28,51 @@ export const ExternalLink = () => {
   }, [])
 
   const handleListenAuthState = () => {
-    const s = localStorage.getItem('auth')
-    setAuth(
-      s
-        ? (JSON.parse(s) as AuthInfo)
-        : {
-            access_token: '',
-            refresh_token: '',
-          }
-    )
+    const cookies = document.cookie;
+    const accessToken = cookies.match(/accessToken=([^;]+)/);
+    const refreshToken = cookies.match(/refreshToken=([^;]+)/);
+    if (!accessToken || !refreshToken) {
+      setAuth(
+        {
+          access_token: '',
+          refresh_token: '',
+        }
+      )
+    } else {
+      const aTokenString = accessToken[1];
+      const rTokenString = refreshToken[1];
+      setAuth(
+        {
+          access_token: aTokenString,
+          refresh_token: rTokenString,
+        }
+      )
+    }
   }
 
   useEffect(() => {
     window.addEventListener('auth_info_changed', handleListenAuthState)
 
-    const s = localStorage.getItem('auth')
-    setAuth(
-      s
-        ? (JSON.parse(s) as AuthInfo)
-        : {
-            access_token: '',
-            refresh_token: '',
-          }
-    )
+    const cookies = document.cookie;
+    const accessToken = cookies.match(/accessToken=([^;]+)/);
+    const refreshToken = cookies.match(/refreshToken=([^;]+)/);
+    if (!accessToken || !refreshToken) {
+      setAuth(
+        {
+          access_token: '',
+          refresh_token: '',
+        }
+      )
+    } else {
+      const aTokenString = accessToken[1];
+      const rTokenString = refreshToken[1];
+      setAuth(
+        {
+          access_token: aTokenString,
+          refresh_token: rTokenString,
+        }
+      )
+    }
 
     return () => {
       window.removeEventListener('auth_info_changed', handleListenAuthState)
